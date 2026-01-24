@@ -38,7 +38,6 @@ void main() async {
 
 class SettingsProvider extends ChangeNotifier {
   final SharedPreferences _prefs;
-  bool _isAdvancedMode = true;
   String _language = 'id';
   ThemeMode _themeMode = ThemeMode.system;
   String _fontFamily = 'Inter';
@@ -53,12 +52,11 @@ class SettingsProvider extends ChangeNotifier {
     Colors.orange,
     Colors.red,
     Colors.teal,
-    Colors.indigo,
+    Colors.indigo
   ];
 
   SettingsProvider(this._prefs) {
     _language = _prefs.getString('language') ?? 'id';
-    _isAdvancedMode = _prefs.getBool('isAdvancedMode') ?? true;
     _fontFamily = _prefs.getString('fontFamily') ?? 'Inter';
     _fontSizeMultiplier = _prefs.getDouble('fontSizeMultiplier') ?? 1.0;
     _themeColorIndex = _prefs.getInt('themeColorIndex') ?? 0;
@@ -69,7 +67,6 @@ class SettingsProvider extends ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
   String get fontFamily => _fontFamily;
   double get fontSizeMultiplier => _fontSizeMultiplier;
-  bool get isAdvancedMode => _isAdvancedMode;
   int get themeColorIndex => _themeColorIndex;
   Color get themeColor => themeColors[_themeColorIndex];
 
@@ -100,12 +97,6 @@ class SettingsProvider extends ChangeNotifier {
   void setFontSizeMultiplier(double multiplier) {
     _fontSizeMultiplier = multiplier;
     _prefs.setDouble('fontSizeMultiplier', multiplier);
-    notifyListeners();
-  }
-
-  void setAdvancedMode(bool val) {
-    _isAdvancedMode = val;
-    _prefs.setBool('isAdvancedMode', val);
     notifyListeners();
   }
 }

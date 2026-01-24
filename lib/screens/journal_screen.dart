@@ -5,6 +5,7 @@ import '../providers/journal_provider.dart';
 import '../models/category.dart';
 import 'category_detail_screen.dart';
 import 'template_editor_screen.dart';
+import 'template_jurnal.dart';
 
 class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key});
@@ -97,10 +98,54 @@ class _JournalScreenState extends State<JournalScreen> {
             ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const TemplateEditorScreen(),
+          showModalBottomSheet(
+            context: context,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            builder: (context) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 8),
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  leading: const iconoir.MultiplePages(),
+                  title: const Text('Pilih dari Template'),
+                  subtitle: const Text('Gunakan template yang sudah ada'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TemplateJurnalScreen(),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const iconoir.Plus(),
+                  title: const Text('Buat Template Baru (Custom)'),
+                  subtitle: const Text('Buat field sesuai keinginan Anda'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TemplateEditorScreen(),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
+              ],
             ),
           );
         },
@@ -157,6 +202,14 @@ class _JournalScreenState extends State<JournalScreen> {
         return iconoir.Cart(width: size, height: size, color: color);
       case 'dumbbell':
         return iconoir.Gym(width: size, height: size, color: color);
+      case 'book':
+        return iconoir.Book(width: size, height: size, color: color);
+      case 'airplane':
+        return iconoir.Airplane(width: size, height: size, color: color);
+      case 'settings':
+        return iconoir.Settings(width: size, height: size, color: color);
+      case 'leaf':
+        return iconoir.Flower(width: size, height: size, color: color);
       default:
         return iconoir.Journal(width: size, height: size, color: color);
     }

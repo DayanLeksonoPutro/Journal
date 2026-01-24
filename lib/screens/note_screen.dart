@@ -39,7 +39,35 @@ class _NoteScreenState extends State<NoteScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context, 'note')),
+        title: Row(
+          children: [
+            Text(AppLocalizations.of(context, 'note')),
+            if (provider.streakCount > 0) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ],
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const iconoir.Search(),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: NoteSearchDelegate(
+                  notes: notes,
+                  onNoteTap: _openEditor,
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: notes.isEmpty
           ? const Center(child: Text('No notes yet'))
@@ -64,56 +92,103 @@ class _NoteScreenState extends State<NoteScreen> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openEditor(note),
-                    onLongPress: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: const iconoir.Journal(),
-                              title: const Text('Convert to Journal Entry'),
-                              onTap: () {
-                                Navigator.pop(context);
-                                _showCategorySelectionDialog(context, note);
-                              },
-                            ),
-                            ListTile(
-                              leading: const iconoir.Bin(color: Colors.red),
-                              title: const Text('Delete Note',
-                                  style: TextStyle(color: Colors.red)),
-                              onTap: () {
-                                provider.deleteNote(note.id);
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (note.title.isNotEmpty)
-                            Text(
-                              note.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (note.title.isNotEmpty)
+                                      Hero(
+                                        tag: 'title_${note.id}',
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: Text(
+                                            note.title,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    if (note.title.isNotEmpty)
+                                      const SizedBox(height: 4),
+                                  ],
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  provider.toggleBookmark(note.id);
+                                },
+                                child: note.isBookmarked
+                                    ? const iconoir.StarSolid(
+                                        color: Colors.amber,
+                                        width: 18,
+                                        height: 18,
+                                      )
+                                    : const iconoir.Star(
+                                        color: Colors.grey,
+                                        width: 18,
+                                        height: 18,
+                                      ),
+                              ),
+                            ],
+                          ),
+                          Expanded(
+                            child: Hero(
+                              tag: 'content_${note.id}',
+                              child: Material(
+                                color: Colors.transparent,
+                                child: Text(
+                                  note.content,
+                                  maxLines: note.title.isEmpty ? 5 : 4,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
-                          if (note.title.isNotEmpty) const SizedBox(height: 4),
-                          Expanded(
-                            child: Text(
-                              note.content,
-                              maxLines: note.title.isEmpty ? 6 : 5,
-                              overflow: TextOverflow.ellipsis,
-                            ),
                           ),
+                          if (note.tags.isNotEmpty) ...[
+                            const SizedBox(height: 4),
+                            Wrap(
+                              spacing: 4,
+                              runSpacing: 4,
+                              children: note.tags
+                                  .take(3)
+                                  .map((tag) => Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4, vertical: 1),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                              .withOpacity(0.1),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        child: Text(
+                                          '#$tag',
+                                          style: TextStyle(
+                                            fontSize: 8,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ))
+                                  .toList(),
+                            ),
+                          ],
+                          const SizedBox(height: 4),
                           Text(
                             DateFormat('MMM dd').format(note.updatedAt),
                             style: const TextStyle(
@@ -188,6 +263,65 @@ class _NoteScreenState extends State<NoteScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class NoteSearchDelegate extends SearchDelegate {
+  final List<NoteItem> notes;
+  final Function(NoteItem) onNoteTap;
+
+  NoteSearchDelegate({required this.notes, required this.onNoteTap});
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const iconoir.Xmark(),
+        onPressed: () => query = '',
+      ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const iconoir.NavArrowLeft(),
+      onPressed: () => close(context, null),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) => _buildSearchResults();
+
+  @override
+  Widget buildSuggestions(BuildContext context) => _buildSearchResults();
+
+  Widget _buildSearchResults() {
+    final filtered = notes
+        .where((n) =>
+            n.title.toLowerCase().contains(query.toLowerCase()) ||
+            n.content.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    if (filtered.isEmpty) {
+      return const Center(child: Text('No matches found'));
+    }
+
+    return ListView.builder(
+      itemCount: filtered.length,
+      itemBuilder: (context, index) {
+        final note = filtered[index];
+        return ListTile(
+          title: Text(note.title.isEmpty ? 'Untitled' : note.title),
+          subtitle:
+              Text(note.content, maxLines: 1, overflow: TextOverflow.ellipsis),
+          onTap: () {
+            close(context, null);
+            onNoteTap(note);
+          },
+        );
+      },
     );
   }
 }

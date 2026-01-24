@@ -114,16 +114,6 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           const Divider(),
-          _buildSectionHeader(context, 'App Experience'),
-          SwitchListTile(
-            secondary: const iconoir.ViewGrid(),
-            title: const Text('App Mode (Advanced)'),
-            value: settings.isAdvancedMode,
-            onChanged: (val) {
-              settings.setAdvancedMode(val);
-            },
-          ),
-          const Divider(),
           _buildSectionHeader(context, 'Data & Support'),
           ListTile(
             leading: const iconoir.Database(),
