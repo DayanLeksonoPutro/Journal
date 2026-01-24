@@ -14,6 +14,8 @@ class AppLocalizations {
       'task': 'Task',
       'report': 'Report',
       'setting': 'Setting',
+      'todo': 'Todo',
+      'note': 'Note',
       'download_share': 'Download Journal now!',
       'app_description':
           'Journal is a custom daily logging app designed to help you track habits, trading, or any activity with fully customizable templates.',
@@ -29,6 +31,8 @@ class AppLocalizations {
       'task': 'Catatan',
       'report': 'Laporan',
       'setting': 'Pengaturan',
+      'todo': 'Todo',
+      'note': 'Catatan',
       'download_share': 'Unduh Journal sekarang!',
       'app_description':
           'Journal adalah aplikasi pencatatan harian kustom yang dirancang untuk membantu Anda melacak progres habit, trading, atau aktivitas apa pun dengan template yang dapat disesuaikan sepenuhnya.',

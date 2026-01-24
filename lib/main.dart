@@ -8,14 +8,16 @@ import 'utils/app_localizations.dart';
 // Screens - will be moved to separate files later
 import 'screens/home_screen.dart';
 import 'screens/journal_screen.dart';
-import 'screens/task_screen.dart';
+import 'screens/todo_screen.dart';
+import 'screens/note_screen.dart';
 import 'screens/report_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/onboarding_screen.dart';
 
 // Providers
 import 'providers/journal_provider.dart';
-import 'providers/task_provider.dart';
+import 'providers/todo_provider.dart';
+import 'providers/note_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +28,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => SettingsProvider(prefs)),
         ChangeNotifierProvider(create: (_) => JournalProvider(prefs)),
-        ChangeNotifierProvider(create: (_) => TaskProvider(prefs)),
+        ChangeNotifierProvider(create: (_) => TodoProvider(prefs)),
+        ChangeNotifierProvider(create: (_) => NoteProvider(prefs)),
       ],
       child: MyApp(showOnboarding: !onboardingDone),
     ),
@@ -165,8 +168,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final List<Widget> screens = [
       const HomeScreen(),
       const JournalScreen(),
-      const TaskScreen(),
-      if (settings.isAdvancedMode) const ReportScreen(),
+      const TodoScreen(),
+      const NoteScreen(),
       const SettingsScreen(),
     ];
 
@@ -194,13 +197,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
           NavigationDestination(
             icon: const iconoir.CheckSquare(),
-            label: AppLocalizations.of(context, 'task'),
+            label: AppLocalizations.of(context, 'todo'),
           ),
-          if (settings.isAdvancedMode)
-            NavigationDestination(
-              icon: const iconoir.GraphUp(),
-              label: AppLocalizations.of(context, 'report'),
-            ),
+          NavigationDestination(
+            icon: const iconoir.Notes(),
+            label: AppLocalizations.of(context, 'note'),
+          ),
           NavigationDestination(
             icon: const iconoir.Settings(),
             label: AppLocalizations.of(context, 'setting'),
