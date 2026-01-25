@@ -5,11 +5,10 @@ import 'package:intl/intl.dart';
 import '../providers/journal_provider.dart';
 import '../providers/note_provider.dart';
 import '../models/category.dart';
-import '../models/entry.dart';
 import '../utils/tool.dart';
-import 'category_detail_screen.dart';
 import 'entry_form_screen.dart';
 import 'note_editor_screen.dart';
+import '../utils/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -17,12 +16,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final journalProvider = Provider.of<JournalProvider>(context);
-    final recentEntries = journalProvider.entries.reversed.take(3).toList();
     final categories = journalProvider.categories;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Journal'),
+        title: Text(AppLocalizations.of(context, 'app_title')),
         actions: [
           IconButton(
             icon: const iconoir.ShareAndroid(),
@@ -38,7 +36,7 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            'Fast Actions',
+            AppLocalizations.of(context, 'fast_actions'),
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -49,28 +47,6 @@ class HomeScreen extends StatelessWidget {
           _buildFastActions(context, categories),
           const SizedBox(height: 24),
           _buildBookmarkedNotes(context),
-          const SizedBox(height: 24),
-          Text(
-            'Recent Entries',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-          const SizedBox(height: 12),
-          recentEntries.isEmpty
-              ? const Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 40),
-                    child: Text('No entries yet'),
-                  ),
-                )
-              : Column(
-                  children: recentEntries
-                      .map((e) => _buildRecentEntryTile(context, e, categories))
-                      .toList(),
-                ),
         ],
       ),
     );
@@ -87,7 +63,7 @@ class HomeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Pinned Notes',
+          AppLocalizations.of(context, 'pinned_notes'),
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -184,7 +160,8 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildFastActions(
       BuildContext context, List<JournalCategory> categories) {
-    if (categories.isEmpty) return const Text('Add categories in Journal tab');
+    if (categories.isEmpty)
+      return Text(AppLocalizations.of(context, 'add_categories_hint'));
 
     return SizedBox(
       height: 100,
@@ -219,34 +196,6 @@ class HomeScreen extends StatelessWidget {
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.primary)),
               ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildRecentEntryTile(BuildContext context, JournalEntry entry,
-      List<JournalCategory> categories) {
-    final categoryResults = categories.where((c) => c.id == entry.categoryId);
-    final category = categoryResults.isNotEmpty ? categoryResults.first : null;
-    final dateStr = DateFormat('MMM dd, HH:mm').format(entry.timestamp);
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
-        title: Text(category?.name ?? 'Unknown'),
-        subtitle: Text(dateStr),
-        leading: entry.isSuccess
-            ? const iconoir.CheckCircle(color: Colors.green)
-            : const iconoir.Circle(color: Colors.grey),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  CategoryDetailScreen(categoryId: entry.categoryId),
             ),
           );
         },

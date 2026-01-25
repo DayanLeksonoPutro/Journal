@@ -7,6 +7,8 @@ import 'category_detail_screen.dart';
 import 'template_editor_screen.dart';
 import 'template_jurnal.dart';
 
+import '../utils/app_localizations.dart';
+
 class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key});
 
@@ -33,8 +35,8 @@ class _JournalScreenState extends State<JournalScreen> {
             ? TextField(
                 controller: _searchController,
                 autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Search journals...',
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context, 'search_journals'),
                   border: InputBorder.none,
                 ),
                 onChanged: (value) {
@@ -43,7 +45,7 @@ class _JournalScreenState extends State<JournalScreen> {
                   });
                 },
               )
-            : const Text('My Journals'),
+            : Text(AppLocalizations.of(context, 'my_journals')),
         actions: [
           IconButton(
             icon: _isSearching ? const iconoir.Xmark() : const iconoir.Search(),
@@ -68,7 +70,7 @@ class _JournalScreenState extends State<JournalScreen> {
                   children: [
                     ListTile(
                       leading: const iconoir.List(),
-                      title: const Text('Sort A-Z'),
+                      title: Text(AppLocalizations.of(context, 'sort_az')),
                       onTap: () {
                         // In a real app, you might want to call a provider method
                         // but for now we'll just close
@@ -83,7 +85,7 @@ class _JournalScreenState extends State<JournalScreen> {
         ],
       ),
       body: categories.isEmpty
-          ? const Center(child: Text('No journals yet. Create one!'))
+          ? Center(child: Text(AppLocalizations.of(context, 'no_journals')))
           : GridView.builder(
               padding: const EdgeInsets.all(16),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -118,8 +120,10 @@ class _JournalScreenState extends State<JournalScreen> {
                 const SizedBox(height: 16),
                 ListTile(
                   leading: const iconoir.MultiplePages(),
-                  title: const Text('Pilih dari Template'),
-                  subtitle: const Text('Gunakan template yang sudah ada'),
+                  title:
+                      Text(AppLocalizations.of(context, 'pilih_dari_template')),
+                  subtitle:
+                      Text(AppLocalizations.of(context, 'gunakan_template')),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(
@@ -132,8 +136,9 @@ class _JournalScreenState extends State<JournalScreen> {
                 ),
                 ListTile(
                   leading: const iconoir.Plus(),
-                  title: const Text('Buat Template Baru (Custom)'),
-                  subtitle: const Text('Buat field sesuai keinginan Anda'),
+                  title:
+                      Text(AppLocalizations.of(context, 'buat_template_baru')),
+                  subtitle: Text(AppLocalizations.of(context, 'buat_field')),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(
@@ -149,7 +154,7 @@ class _JournalScreenState extends State<JournalScreen> {
             ),
           );
         },
-        label: const Text('Add Template'),
+        label: Text(AppLocalizations.of(context, 'add_template')),
         icon: const iconoir.Plus(),
       ),
     );

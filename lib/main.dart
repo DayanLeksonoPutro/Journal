@@ -10,7 +10,6 @@ import 'screens/home_screen.dart';
 import 'screens/journal_screen.dart';
 import 'screens/todo_screen.dart';
 import 'screens/note_screen.dart';
-import 'screens/report_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/onboarding_screen.dart';
 
@@ -154,8 +153,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final settings = Provider.of<SettingsProvider>(context);
-
     final List<Widget> screens = [
       const HomeScreen(),
       const JournalScreen(),

@@ -17,10 +17,11 @@ class SettingsScreen extends StatelessWidget {
     final settings = Provider.of<SettingsProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context, 'setting'))),
       body: ListView(
         children: [
-          _buildSectionHeader(context, 'Info App'),
+          _buildSectionHeader(
+              context, AppLocalizations.of(context, 'info_app')),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
@@ -31,10 +32,11 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           const Divider(),
-          _buildSectionHeader(context, 'Appearance'),
+          _buildSectionHeader(
+              context, AppLocalizations.of(context, 'appearance')),
           ListTile(
             leading: const iconoir.Translate(),
-            title: const Text('Language'),
+            title: Text(AppLocalizations.of(context, 'language')),
             subtitle: Text(
               settings.language == 'id' ? 'Bahasa Indonesia' : 'English',
             ),
@@ -44,7 +46,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           SwitchListTile(
             secondary: const iconoir.HalfMoon(),
-            title: const Text('Dark Mode'),
+            title: Text(AppLocalizations.of(context, 'dark_mode')),
             value: settings.themeMode == ThemeMode.dark,
             onChanged: (val) {
               settings.setThemeMode(
@@ -98,7 +100,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             leading: const iconoir.Type(),
-            title: const Text('Font Style'),
+            title: Text(AppLocalizations.of(context, 'font_style')),
             subtitle: Text(settings.fontFamily),
             onTap: () {
               _showFontPicker(context, settings);
@@ -106,7 +108,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             leading: const iconoir.Type(),
-            title: const Text('Font Size'),
+            title: Text(AppLocalizations.of(context, 'font_size')),
             subtitle:
                 Text(_getFontSizeLabel(context, settings.fontSizeMultiplier)),
             onTap: () {
@@ -114,27 +116,28 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           const Divider(),
-          _buildSectionHeader(context, 'Data & Support'),
+          _buildSectionHeader(
+              context, AppLocalizations.of(context, 'data_support')),
           ListTile(
             leading: const iconoir.Database(),
-            title: const Text('Backup & Restore'),
+            title: Text(AppLocalizations.of(context, 'backup_restore')),
             onTap: () {
               _showBackupRestoreDialog(context);
             },
           ),
           ListTile(
             leading: const iconoir.Star(),
-            title: const Text('Rate App'),
+            title: Text(AppLocalizations.of(context, 'rate_app')),
             onTap: () => AppTool.rateApp(),
           ),
           ListTile(
             leading: const iconoir.ShareAndroid(),
-            title: const Text('Share App'),
+            title: Text(AppLocalizations.of(context, 'share_app')),
             onTap: () => AppTool.shareApp(context),
           ),
           ListTile(
             leading: const iconoir.QuestionMark(),
-            title: const Text('Tutorial'),
+            title: Text(AppLocalizations.of(context, 'tutorial')),
             onTap: () {
               Navigator.push(
                 context,
@@ -144,17 +147,17 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             leading: const iconoir.Code(),
-            title: const Text('Developer Options'),
+            title: Text(AppLocalizations.of(context, 'developer_options')),
             onTap: () {
               _showDeveloperOptions(context);
             },
           ),
-          const Padding(
-            padding: EdgeInsets.all(20),
+          Padding(
+            padding: const EdgeInsets.all(20),
             child: Text(
-              'Version 1.0.0 (Build 1)',
+              '${AppLocalizations.of(context, 'version')} 1.0.0 (Build 1)',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
             ),
           ),
         ],
@@ -277,7 +280,7 @@ class SettingsScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    'Select Font',
+                    AppLocalizations.of(context, 'select_font'),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -313,7 +316,7 @@ class SettingsScreen extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'OK',
+              AppLocalizations.of(context, 'cancel'),
               style: TextStyle(color: Theme.of(context).colorScheme.primary),
             ),
           ),
@@ -330,18 +333,20 @@ class SettingsScreen extends StatelessWidget {
         children: [
           ListTile(
             leading: const iconoir.Database(),
-            title: const Text('Generate Dummy Data'),
+            title: Text(AppLocalizations.of(context, 'generate_dummy_data')),
             onTap: () {
               Provider.of<JournalProvider>(context, listen: false)
                   .generateDummyData();
               Navigator.pop(context);
               _showPlaceholderDialog(
-                  context, 'Success', 'Dummy data generated.');
+                  context,
+                  AppLocalizations.of(context, 'success'),
+                  AppLocalizations.of(context, 'dummy_data_generated'));
             },
           ),
           ListTile(
             leading: const iconoir.Bin(color: Colors.red),
-            title: const Text('Clear All Data',
+            title: Text(AppLocalizations.of(context, 'clear_all_data'),
                 style: TextStyle(color: Colors.red)),
             onTap: () {
               Provider.of<JournalProvider>(context, listen: false)
@@ -366,7 +371,7 @@ class SettingsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Backup & Restore',
+              AppLocalizations.of(context, 'backup_restore'),
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -376,21 +381,22 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             leading: const iconoir.Download(),
-            title: const Text('Export Data (to JSON)'),
-            subtitle: const Text('Copy your data as a JSON string'),
+            title: Text(AppLocalizations.of(context, 'export_data')),
+            subtitle: Text(AppLocalizations.of(context, 'export_subtitle')),
             onTap: () {
               final jsonString = journalProvider.exportData();
               Clipboard.setData(ClipboardData(text: jsonString));
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Data copied to clipboard!')),
+                SnackBar(
+                    content: Text(AppLocalizations.of(context, 'data_copied'))),
               );
             },
           ),
           ListTile(
             leading: const iconoir.Upload(),
-            title: const Text('Import Data (from JSON)'),
-            subtitle: const Text('Restore data from a JSON string'),
+            title: Text(AppLocalizations.of(context, 'import_data')),
+            subtitle: Text(AppLocalizations.of(context, 'import_subtitle')),
             onTap: () {
               Navigator.pop(context);
               _showImportDialog(context);
@@ -408,21 +414,21 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          'Import Data',
+          AppLocalizations.of(context, 'import_data'),
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
         content: TextField(
           controller: controller,
           maxLines: 5,
-          decoration: const InputDecoration(
-            hintText: 'Paste JSON string here...',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            hintText: AppLocalizations.of(context, 'paste_json'),
+            border: const OutlineInputBorder(),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context, 'cancel')),
           ),
           TextButton(
             onPressed: () {
@@ -432,14 +438,18 @@ class SettingsScreen extends StatelessWidget {
               Navigator.pop(context);
               if (success) {
                 _showPlaceholderDialog(
-                    context, 'Success', 'Data imported successfully!');
+                    context,
+                    AppLocalizations.of(context, 'success'),
+                    AppLocalizations.of(context, 'import_success'));
               } else {
-                _showPlaceholderDialog(context, 'Error',
-                    'Failed to import data. Please check the JSON format.');
+                _showPlaceholderDialog(
+                    context,
+                    AppLocalizations.of(context, 'import_error'),
+                    AppLocalizations.of(context, 'import_error'));
               }
             },
             child: Text(
-              'Import',
+              AppLocalizations.of(context, 'import'),
               style: TextStyle(color: Theme.of(context).colorScheme.primary),
             ),
           ),
@@ -505,7 +515,7 @@ class _FontListState extends State<_FontList> {
                 padding: EdgeInsets.all(12.0),
                 child: iconoir.Search(width: 20, height: 20),
               ),
-              hintText: 'Search fonts...',
+              hintText: AppLocalizations.of(context, 'search_fonts'),
               filled: true,
               fillColor: Theme.of(context)
                   .colorScheme
@@ -529,14 +539,16 @@ class _FontListState extends State<_FontList> {
             itemBuilder: (context, index) {
               if (_searchController.text.isEmpty) {
                 if (index == 0) {
-                  return _buildSectionHeader('Popular Fonts');
+                  return _buildSectionHeader(
+                      AppLocalizations.of(context, 'popular_fonts'));
                 }
                 if (index <= widget.popularFonts.length) {
                   final font = widget.popularFonts[index - 1];
                   return _buildFontTile(font);
                 }
                 if (index == widget.popularFonts.length + 1) {
-                  return _buildSectionHeader('All Fonts');
+                  return _buildSectionHeader(
+                      AppLocalizations.of(context, 'all_fonts'));
                 }
                 final font =
                     _filteredFonts[index - widget.popularFonts.length - 2];

@@ -6,6 +6,7 @@ import '../providers/journal_provider.dart';
 import '../models/entry.dart';
 import 'entry_form_screen.dart';
 import 'template_editor_screen.dart';
+import '../utils/app_localizations.dart';
 
 class CategoryDetailScreen extends StatelessWidget {
   final String categoryId;
@@ -41,13 +42,13 @@ class CategoryDetailScreen extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('Delete Category?'),
+                  title: Text(AppLocalizations.of(context, 'delete_category')),
                   content: const Text(
                       'This will permanently delete this category and all its entries.'),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
+                      child: Text(AppLocalizations.of(context, 'cancel')),
                     ),
                     TextButton(
                       onPressed: () {
@@ -55,7 +56,7 @@ class CategoryDetailScreen extends StatelessWidget {
                         Navigator.pop(context); // Close dialog
                         Navigator.pop(context); // Exit detail screen
                       },
-                      child: const Text('Delete',
+                      child: Text(AppLocalizations.of(context, 'delete'),
                           style: TextStyle(color: Colors.red)),
                     ),
                   ],

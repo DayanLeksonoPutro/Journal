@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../utils/tool.dart';
 import '../providers/journal_provider.dart';
+import '../utils/app_localizations.dart';
 
 class ReportScreen extends StatelessWidget {
   const ReportScreen({super.key});
@@ -15,7 +16,7 @@ class ReportScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reports'),
+        title: Text(AppLocalizations.of(context, 'reports')),
         actions: [
           IconButton(
             icon: const iconoir.ShareAndroid(),

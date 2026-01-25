@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconoir_flutter/iconoir_flutter.dart' as iconoir;
+import '../utils/app_localizations.dart';
 
 class TutorialScreen extends StatelessWidget {
   const TutorialScreen({super.key});
@@ -8,7 +9,7 @@ class TutorialScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tutorial & Guide'),
+        title: Text(AppLocalizations.of(context, 'tutorial_guide')),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
