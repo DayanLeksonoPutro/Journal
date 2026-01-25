@@ -73,64 +73,6 @@ class HomeScreen extends StatelessWidget {
                 ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Open adding for first category if available
-          if (categories.isNotEmpty) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    EntryFormScreen(categoryId: categories.first.id),
-              ),
-            );
-          }
-        },
-        child: const iconoir.Plus(),
-      ),
-    );
-  }
-
-  Widget _buildSuccessOverview(JournalProvider provider) {
-    // Determine overall success rate
-    double totalRate = 0;
-    if (provider.categories.isNotEmpty) {
-      for (var cat in provider.categories) {
-        totalRate += provider.getSuccessRate(cat.id);
-      }
-      totalRate = totalRate / provider.categories.length;
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Daily Success Rate',
-            style: TextStyle(color: Colors.white70),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Text(
-                '${totalRate.toStringAsFixed(0)}%',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Spacer(),
-              const iconoir.GraphUp(color: Colors.green),
-            ],
-          ),
-        ],
-      ),
     );
   }
 
@@ -187,14 +129,25 @@ class HomeScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (note.title.isNotEmpty)
-                            Text(
-                              note.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    note.title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                                const iconoir.Bookmark(
+                                  color: Colors.amber,
+                                  width: 12,
+                                  height: 12,
+                                ),
+                              ],
                             ),
                           if (note.title.isNotEmpty) const SizedBox(height: 4),
                           Expanded(
@@ -213,11 +166,6 @@ class HomeScreen extends StatelessWidget {
                                 DateFormat('MMM dd').format(note.updatedAt),
                                 style: const TextStyle(
                                     fontSize: 10, color: Colors.grey),
-                              ),
-                              const iconoir.StarSolid(
-                                color: Colors.amber,
-                                width: 12,
-                                height: 12,
                               ),
                             ],
                           ),

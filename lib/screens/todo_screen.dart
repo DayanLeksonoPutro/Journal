@@ -176,31 +176,6 @@ class _TodoScreenState extends State<TodoScreen> {
       ),
       body: Column(
         children: [
-          if (todos.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  _StatItem(
-                    label: 'Hari Ini',
-                    value: provider.doneTodayCount.toString(),
-                    color: Colors.blue,
-                  ),
-                  const SizedBox(width: 12),
-                  _StatItem(
-                    label: 'Selesai',
-                    value: doneCount.toString(),
-                    color: Colors.green,
-                  ),
-                  const SizedBox(width: 12),
-                  _StatItem(
-                    label: 'Rate',
-                    value: '${(progress * 100).toInt()}%',
-                    color: Colors.orange,
-                  ),
-                ],
-              ),
-            ),
           Expanded(
             child: todos.isEmpty
                 ? Center(
@@ -263,8 +238,8 @@ class _TodoScreenState extends State<TodoScreen> {
                           }
                         },
                         child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 4),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 16),
                           leading: GestureDetector(
                             onTap: () {
                               provider.toggleTodo(todo.id);
@@ -335,8 +310,6 @@ class _TodoScreenState extends State<TodoScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
         elevation: 4,
         child: const iconoir.Plus(),
       ),

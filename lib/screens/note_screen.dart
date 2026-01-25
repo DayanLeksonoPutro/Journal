@@ -130,12 +130,12 @@ class _NoteScreenState extends State<NoteScreen> {
                                   provider.toggleBookmark(note.id);
                                 },
                                 child: note.isBookmarked
-                                    ? const iconoir.StarSolid(
+                                    ? const iconoir.Bookmark(
                                         color: Colors.amber,
                                         width: 18,
                                         height: 18,
                                       )
-                                    : const iconoir.Star(
+                                    : const iconoir.Bookmark(
                                         color: Colors.grey,
                                         width: 18,
                                         height: 18,
