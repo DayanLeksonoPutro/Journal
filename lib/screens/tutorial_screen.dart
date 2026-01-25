@@ -50,6 +50,15 @@ class TutorialScreen extends StatelessWidget {
             description:
                 'Use the Task tab for simple checklists or brainstorming. You can long-press a note to convert it into a formal journal entry later.',
           ),
+          _buildTutorialStep(
+            context: context,
+            icon: iconoir.PageFlip(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            title: '5. Smart Editor',
+            description:
+                'Inside any note, use the toggle button to switch between Text mode and Checklist mode instantly. Titles are auto-generated if left empty!',
+          ),
           const SizedBox(height: 40),
           Container(
             padding: const EdgeInsets.all(20),

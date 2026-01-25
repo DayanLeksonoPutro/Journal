@@ -116,7 +116,9 @@ class HomeScreen extends StatelessWidget {
                                     note.title,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                     ),
@@ -135,7 +137,10 @@ class HomeScreen extends StatelessWidget {
                               note.content,
                               maxLines: note.title.isEmpty ? 5 : 4,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 12),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 4),

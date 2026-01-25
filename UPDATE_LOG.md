@@ -35,6 +35,33 @@
 - ✅ Tags support (#tag)
 - ✅ Last updated date
 
+- ✅ Last updated date
+
+---
+
+### 3. **Smart Note Editor** ✍️✨
+
+**Location:** `lib/screens/note_editor_screen.dart`
+
+#### What's New:
+- **Hybrid Editor**: Satu editor untuk Text dan Checklist. Bisa switch mode kapan saja tanpa data hilang!
+- **Smart Auto-Title**: Lupa kasih judul? App akan otomatis generate judul dari isi note atau item pertama checklist.
+- **Content Analysis**:
+  - **Word Counter** untuk text mode
+  - **Item Counter** untuk checklist mode
+  - **Smart Badges**: "Quick note", "Long thought", "Checklist" indicators di bawah screen
+- **Auto-Cleanup**: Menghapus empty items secara otomatis saat save.
+
+#### How to Use:
+1. Buka Note/Task apapun
+2. Tap icon **Toggle** (📝/☑️) di pojok kanan atas untuk ubah mode
+3. Mode **Text**: Ketik bebas seperti biasa
+4. Mode **Checklist**:
+   - Enter untuk tambah item baru
+   - Drag handle (::) untuk reorder
+   - Tap checkbox untuk mark done
+5. Tekan back untuk Auto-save
+
 ---
 
 ### 2. **Journal Habit Tracking** 📅🔥
