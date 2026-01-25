@@ -14,27 +14,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<OnboardingData> _pages = [
-    OnboardingData(
-      title: 'Build Your Journal',
-      description:
-          'Create custom templates for trading, fitness, or daily habits.',
-      icon: const iconoir.Journal(width: 100, height: 100),
-    ),
-    OnboardingData(
-      title: 'Track Success Rate',
-      description:
-          'Define your KPI and see your progress over time with advanced charts.',
-      icon: const iconoir.GraphUp(width: 100, height: 100),
-    ),
-    OnboardingData(
-      title: 'Stay Minimalist',
-      description:
-          'One app for all your tracking needs. Fast, clean, and local.',
-      icon: const iconoir.EaseIn(width: 100, height: 100),
-    ),
-  ];
-
   void _finish() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_done', true);
@@ -48,6 +27,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<OnboardingData> pages = [
+      OnboardingData(
+        title: 'Build Your Journal',
+        description:
+            'Create custom templates for trading, fitness, or daily habits.',
+        icon: iconoir.Journal(
+            color: Theme.of(context).colorScheme.primary,
+            width: 100,
+            height: 100),
+      ),
+      OnboardingData(
+        title: 'Track Success Rate',
+        description:
+            'Define your KPI and see your progress over time with advanced charts.',
+        icon: iconoir.GraphUp(
+            color: Theme.of(context).colorScheme.primary,
+            width: 100,
+            height: 100),
+      ),
+      OnboardingData(
+        title: 'Stay Minimalist',
+        description:
+            'One app for all your tracking needs. Fast, clean, and local.',
+        icon: iconoir.EaseIn(
+            color: Theme.of(context).colorScheme.primary,
+            width: 100,
+            height: 100),
+      ),
+    ];
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -55,14 +64,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
-                itemCount: _pages.length,
+                itemCount: pages.length,
                 onPageChanged: (index) {
                   setState(() {
                     _currentPage = index;
                   });
                 },
                 itemBuilder: (context, index) {
-                  final page = _pages[index];
+                  final page = pages[index];
                   return Padding(
                     padding: const EdgeInsets.all(40.0),
                     child: Column(
@@ -96,7 +105,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   Row(
                     children: List.generate(
-                      _pages.length,
+                      pages.length,
                       (index) => Container(
                         margin: const EdgeInsets.only(right: 8),
                         width: _currentPage == index ? 24 : 8,
@@ -111,7 +120,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   TextButton(
-                    onPressed: _currentPage == _pages.length - 1
+                    onPressed: _currentPage == pages.length - 1
                         ? _finish
                         : () {
                             _pageController.nextPage(
@@ -119,7 +128,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               curve: Curves.easeIn,
                             );
                           },
-                    child: Text(_currentPage == _pages.length - 1
+                    child: Text(_currentPage == pages.length - 1
                         ? 'GET STARTED'
                         : 'NEXT'),
                   ),

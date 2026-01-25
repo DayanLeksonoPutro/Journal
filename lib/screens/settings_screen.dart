@@ -35,7 +35,9 @@ class SettingsScreen extends StatelessWidget {
           _buildSectionHeader(
               context, AppLocalizations.of(context, 'appearance')),
           ListTile(
-            leading: const iconoir.Translate(),
+            leading: iconoir.Translate(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'language')),
             subtitle: Text(
               settings.language == 'id' ? 'Bahasa Indonesia' : 'English',
@@ -45,7 +47,9 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           SwitchListTile(
-            secondary: const iconoir.HalfMoon(),
+            secondary: iconoir.HalfMoon(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'dark_mode')),
             value: settings.themeMode == ThemeMode.dark,
             onChanged: (val) {
@@ -55,7 +59,9 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const iconoir.Palette(),
+            leading: iconoir.Palette(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'color_theme')),
             subtitle: SizedBox(
               height: 40,
@@ -99,7 +105,9 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const iconoir.Type(),
+            leading: iconoir.Type(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'font_style')),
             subtitle: Text(settings.fontFamily),
             onTap: () {
@@ -107,7 +115,9 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const iconoir.Type(),
+            leading: iconoir.Type(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'font_size')),
             subtitle:
                 Text(_getFontSizeLabel(context, settings.fontSizeMultiplier)),
@@ -119,24 +129,32 @@ class SettingsScreen extends StatelessWidget {
           _buildSectionHeader(
               context, AppLocalizations.of(context, 'data_support')),
           ListTile(
-            leading: const iconoir.Database(),
+            leading: iconoir.Database(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'backup_restore')),
             onTap: () {
               _showBackupRestoreDialog(context);
             },
           ),
           ListTile(
-            leading: const iconoir.Star(),
+            leading: iconoir.Star(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'rate_app')),
             onTap: () => AppTool.rateApp(),
           ),
           ListTile(
-            leading: const iconoir.ShareAndroid(),
+            leading: iconoir.ShareAndroid(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'share_app')),
             onTap: () => AppTool.shareApp(context),
           ),
           ListTile(
-            leading: const iconoir.QuestionMark(),
+            leading: iconoir.QuestionMark(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'tutorial')),
             onTap: () {
               Navigator.push(
@@ -146,7 +164,9 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const iconoir.Code(),
+            leading: iconoir.Code(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'developer_options')),
             onTap: () {
               _showDeveloperOptions(context);
@@ -332,7 +352,9 @@ class SettingsScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            leading: const iconoir.Database(),
+            leading: iconoir.Database(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'generate_dummy_data')),
             onTap: () {
               Provider.of<JournalProvider>(context, listen: false)
@@ -380,7 +402,9 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const iconoir.Download(),
+            leading: iconoir.Download(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'export_data')),
             subtitle: Text(AppLocalizations.of(context, 'export_subtitle')),
             onTap: () {
@@ -394,7 +418,9 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const iconoir.Upload(),
+            leading: iconoir.Upload(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text(AppLocalizations.of(context, 'import_data')),
             subtitle: Text(AppLocalizations.of(context, 'import_subtitle')),
             onTap: () {
@@ -511,9 +537,13 @@ class _FontListState extends State<_FontList> {
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              prefixIcon: const Padding(
-                padding: EdgeInsets.all(12.0),
-                child: iconoir.Search(width: 20, height: 20),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: iconoir.Search(
+                  width: 20,
+                  height: 20,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
               hintText: AppLocalizations.of(context, 'search_fonts'),
               filled: true,

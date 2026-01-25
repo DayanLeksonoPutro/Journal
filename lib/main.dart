@@ -8,7 +8,6 @@ import 'utils/app_localizations.dart';
 // Screens - will be moved to separate files later
 import 'screens/home_screen.dart';
 import 'screens/journal_screen.dart';
-import 'screens/todo_screen.dart';
 import 'screens/note_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/onboarding_screen.dart';
@@ -156,7 +155,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final List<Widget> screens = [
       const HomeScreen(),
       const JournalScreen(),
-      const TodoScreen(),
       const NoteScreen(),
       const SettingsScreen(),
     ];
@@ -176,23 +174,27 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         },
         destinations: [
           NavigationDestination(
-            icon: const iconoir.Home(),
+            icon: iconoir.Home(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             label: AppLocalizations.of(context, 'home'),
           ),
           NavigationDestination(
-            icon: const iconoir.Journal(),
+            icon: iconoir.Journal(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             label: AppLocalizations.of(context, 'journal'),
           ),
           NavigationDestination(
-            icon: const iconoir.CheckSquare(),
-            label: AppLocalizations.of(context, 'todo'),
-          ),
-          NavigationDestination(
-            icon: const iconoir.Notes(),
+            icon: iconoir.Notes(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             label: AppLocalizations.of(context, 'note'),
           ),
           NavigationDestination(
-            icon: const iconoir.Settings(),
+            icon: iconoir.Settings(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             label: AppLocalizations.of(context, 'setting'),
           ),
         ],

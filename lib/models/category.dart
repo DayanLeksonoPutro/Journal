@@ -1,4 +1,4 @@
-enum FieldType { text, number, checkbox, imagePair }
+enum FieldType { text, number, checkbox, imagePair, habitCheckbox }
 
 class FieldDefinition {
   final String id;
@@ -16,12 +16,12 @@ class FieldDefinition {
   });
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'label': label,
-    'type': type.name,
-    'isSuccessIndicator': isSuccessIndicator,
-    'successTarget': successTarget,
-  };
+        'id': id,
+        'label': label,
+        'type': type.name,
+        'isSuccessIndicator': isSuccessIndicator,
+        'successTarget': successTarget,
+      };
 
   factory FieldDefinition.fromJson(Map<String, dynamic> json) =>
       FieldDefinition(
@@ -47,11 +47,11 @@ class JournalCategory {
   });
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'iconName': iconName,
-    'fields': fields.map((f) => f.toJson()).toList(),
-  };
+        'id': id,
+        'name': name,
+        'iconName': iconName,
+        'fields': fields.map((f) => f.toJson()).toList(),
+      };
 
   factory JournalCategory.fromJson(Map<String, dynamic> json) =>
       JournalCategory(

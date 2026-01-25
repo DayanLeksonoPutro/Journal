@@ -19,7 +19,8 @@ class ReportScreen extends StatelessWidget {
         title: Text(AppLocalizations.of(context, 'reports')),
         actions: [
           IconButton(
-            icon: const iconoir.ShareAndroid(),
+            icon: iconoir.ShareAndroid(
+                color: Theme.of(context).colorScheme.primary),
             onPressed: () => AppTool.shareApp(context),
           ),
         ],

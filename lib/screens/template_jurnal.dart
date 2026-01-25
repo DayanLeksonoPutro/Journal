@@ -321,7 +321,9 @@ class TemplateJurnalScreen extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Text('${template.fields.length} Field tersedia'),
-              trailing: const iconoir.Plus(),
+              trailing: iconoir.Plus(
+                color: Theme.of(context).colorScheme.primary,
+              ),
               onTap: () => _addTemplate(context, template),
             ),
           );

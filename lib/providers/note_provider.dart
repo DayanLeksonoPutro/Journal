@@ -3,6 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+class ChecklistItem {
+  String id;
+  String text;
+  bool isDone;
+
+  ChecklistItem({
+    required this.id,
+    required this.text,
+    this.isDone = false,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'text': text,
+        'isDone': isDone,
+      };
+
+  factory ChecklistItem.fromJson(Map<String, dynamic> json) => ChecklistItem(
+        id: json['id'],
+        text: json['text'],
+        isDone: json['isDone'] ?? false,
+      );
+}
+
 class NoteItem {
   final String id;
   String title;
@@ -10,6 +34,8 @@ class NoteItem {
   List<String> tags;
   DateTime updatedAt;
   bool isBookmarked;
+  bool isChecklist;
+  List<ChecklistItem> checklistItems;
 
   NoteItem({
     required this.id,
@@ -18,6 +44,8 @@ class NoteItem {
     this.tags = const [],
     required this.updatedAt,
     this.isBookmarked = false,
+    this.isChecklist = false,
+    this.checklistItems = const [],
   });
 
   Map<String, dynamic> toJson() => {
@@ -27,15 +55,21 @@ class NoteItem {
         'tags': tags,
         'updatedAt': updatedAt.toIso8601String(),
         'isBookmarked': isBookmarked,
+        'isChecklist': isChecklist,
+        'checklistItems': checklistItems.map((i) => i.toJson()).toList(),
       };
 
   factory NoteItem.fromJson(Map<String, dynamic> json) => NoteItem(
         id: json['id'],
         title: json['title'] ?? '',
-        content: json['content'],
+        content: json['content'] ?? '',
         tags: List<String>.from(json['tags'] ?? []),
         updatedAt: DateTime.parse(json['updatedAt']),
         isBookmarked: json['isBookmarked'] ?? false,
+        isChecklist: json['isChecklist'] ?? false,
+        checklistItems: (json['checklistItems'] as List? ?? [])
+            .map((i) => ChecklistItem.fromJson(i))
+            .toList(),
       );
 }
 
@@ -92,11 +126,13 @@ class NoteProvider extends ChangeNotifier {
   }
 
   List<String> _parseTags(String content) {
+    if (content.isEmpty) return [];
     final regExp = RegExp(r'#(\w+)');
     return regExp.allMatches(content).map((m) => m.group(1)!).toSet().toList();
   }
 
-  void addNote(String title, String content) {
+  void addNote(String title, String content,
+      {bool isChecklist = false, List<ChecklistItem>? checklistItems}) {
     _notes.insert(
         0,
         NoteItem(
@@ -105,19 +141,24 @@ class NoteProvider extends ChangeNotifier {
           content: content,
           tags: _parseTags(content),
           updatedAt: DateTime.now(),
+          isChecklist: isChecklist,
+          checklistItems: checklistItems ?? [],
         ));
     _saveNotes();
     _updateStreak();
     notifyListeners();
   }
 
-  void updateNote(String id, String title, String content) {
+  void updateNote(String id, String title, String content,
+      {bool? isChecklist, List<ChecklistItem>? checklistItems}) {
     final index = _notes.indexWhere((n) => n.id == id);
     if (index != -1) {
       _notes[index].title = title;
       _notes[index].content = content;
       _notes[index].tags = _parseTags(content);
       _notes[index].updatedAt = DateTime.now();
+      if (isChecklist != null) _notes[index].isChecklist = isChecklist;
+      if (checklistItems != null) _notes[index].checklistItems = checklistItems;
       _saveNotes();
       _updateStreak();
       notifyListeners();

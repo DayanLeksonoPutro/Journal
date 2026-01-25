@@ -71,7 +71,9 @@ class _TodoScreenState extends State<TodoScreen> {
                   ),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const iconoir.Xmark(),
+                    icon: iconoir.Xmark(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ],
               ),
@@ -311,7 +313,9 @@ class _TodoScreenState extends State<TodoScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
         elevation: 4,
-        child: const iconoir.Plus(),
+        child: iconoir.Plus(
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }

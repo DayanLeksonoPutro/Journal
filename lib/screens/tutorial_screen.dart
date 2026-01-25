@@ -16,28 +16,36 @@ class TutorialScreen extends StatelessWidget {
         children: [
           _buildTutorialStep(
             context: context,
-            icon: const iconoir.ViewGrid(),
+            icon: iconoir.ViewGrid(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: '1. Create Templates',
             description:
                 'Go to the Journal tab and click "Add Template". You can define your own fields like text, numbers, checkboxes, or even image pairs.',
           ),
           _buildTutorialStep(
             context: context,
-            icon: const iconoir.PlusCircle(),
+            icon: iconoir.PlusCircle(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: '2. Log Your Activities',
             description:
                 'Once a template is created, click on it to start adding entries. Use the "Success Indicator" field to track your ROI or habit completion.',
           ),
           _buildTutorialStep(
             context: context,
-            icon: const iconoir.GraphUp(),
+            icon: iconoir.GraphUp(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: '3. Analyze Reports',
             description:
                 'Visit the Report tab to see your success rate statistics and consistency heatmap. Make sure App Mode is set to "Advanced" in Settings.',
           ),
           _buildTutorialStep(
             context: context,
-            icon: const iconoir.CheckSquare(),
+            icon: iconoir.CheckSquare(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: '4. Quick Notes & Todos',
             description:
                 'Use the Task tab for simple checklists or brainstorming. You can long-press a note to convert it into a formal journal entry later.',

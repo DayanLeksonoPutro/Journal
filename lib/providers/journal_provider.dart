@@ -88,6 +88,24 @@ class JournalProvider extends ChangeNotifier {
               isSuccessIndicator: true),
         ],
       ),
+      JournalCategory(
+        id: 'cat_gym',
+        name: 'Gym / Olahraga',
+        iconName: 'dumbbell',
+        fields: [
+          FieldDefinition(
+            id: 'workout_habit',
+            label: 'Daily Workout',
+            type: FieldType.habitCheckbox,
+            isSuccessIndicator: true,
+          ),
+          FieldDefinition(
+            id: 'notes',
+            label: 'Notes',
+            type: FieldType.text,
+          ),
+        ],
+      ),
     ];
     _saveCategories();
   }

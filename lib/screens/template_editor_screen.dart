@@ -74,7 +74,9 @@ class _TemplateEditorScreenState extends State<TemplateEditorScreen> {
         title: Text('${widget.category == null ? 'Create' : 'Edit'} Template'),
         actions: [
           IconButton(
-            icon: const iconoir.Check(),
+            icon: iconoir.Check(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             onPressed: _save,
           ),
         ],
@@ -103,7 +105,9 @@ class _TemplateEditorScreenState extends State<TemplateEditorScreen> {
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 TextButton.icon(
                   onPressed: _addField,
-                  icon: const iconoir.Plus(),
+                  icon: iconoir.Plus(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   label: const Text('Add Field'),
                 ),
               ],

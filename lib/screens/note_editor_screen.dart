@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:iconoir_flutter/iconoir_flutter.dart' as iconoir;
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 import '../providers/note_provider.dart';
 
 class NoteEditorScreen extends StatefulWidget {
@@ -18,6 +19,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   bool _isNoteNew = false;
   int _wordCount = 0;
 
+  // Checklist state
+  bool _isChecklist = false;
+  List<ChecklistItem> _checklistItems = [];
+  final List<TextEditingController> _checklistControllers = [];
+  final _uuid = const Uuid();
+
   @override
   void initState() {
     super.initState();
@@ -26,11 +33,32 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _contentController =
         TextEditingController(text: widget.note?.content ?? '');
 
+    // Initialize checklist state
+    _isChecklist = widget.note?.isChecklist ?? false;
+    if (_isChecklist) {
+      // If loading existing checklist, deep copy items
+      if (widget.note?.checklistItems != null) {
+        for (var item in widget.note!.checklistItems) {
+          _checklistItems.add(ChecklistItem(
+            id: item.id,
+            text: item.text,
+            isDone: item.isDone,
+          ));
+          _checklistControllers.add(TextEditingController(text: item.text));
+        }
+      }
+      // Ensure at least one item if empty
+      if (_checklistItems.isEmpty) {
+        _addChecklistItem();
+      }
+    }
+
     _contentController.addListener(_onContentChanged);
     _onContentChanged(); // Initial count
   }
 
   void _onContentChanged() {
+    if (_isChecklist) return; // Word count logic different for checklist
     final text = _contentController.text.trim();
     setState(() {
       _wordCount = text.isEmpty ? 0 : text.split(RegExp(r'\s+')).length;
@@ -41,14 +69,109 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   void dispose() {
     _titleController.dispose();
     _contentController.dispose();
+    for (var controller in _checklistControllers) {
+      controller.dispose();
+    }
     super.dispose();
+  }
+
+  void _toggleMode() {
+    setState(() {
+      if (_isChecklist) {
+        // Convert Checklist -> Text
+        // Join all items with newline
+        final buffer = StringBuffer();
+        for (int i = 0; i < _checklistItems.length; i++) {
+          // Update text from controller first to be sure
+          _checklistItems[i].text = _checklistControllers[i].text;
+
+          if (_checklistItems[i].text.isNotEmpty) {
+            // Optional: Add [x] for done items if desired, but clean text is usually better
+            buffer.writeln(_checklistItems[i].text);
+          }
+        }
+        _contentController.text = buffer.toString().trim();
+        _isChecklist = false;
+
+        // Cleanup checklist resources
+        for (var c in _checklistControllers) c.dispose();
+        _checklistControllers.clear();
+        _checklistItems.clear();
+
+        _onContentChanged(); // Update word count
+      } else {
+        // Convert Text -> Checklist
+        _isChecklist = true;
+        _checklistItems.clear();
+        _checklistControllers.clear(); // Should be empty anyway
+
+        final lines = _contentController.text.split('\n');
+        for (var line in lines) {
+          if (line.trim().isNotEmpty) {
+            final item = ChecklistItem(
+              id: _uuid.v4(),
+              text: line.trim(),
+              isDone: false,
+            );
+            _checklistItems.add(item);
+            _checklistControllers.add(TextEditingController(text: item.text));
+          }
+        }
+
+        // If empty, add one empty item
+        if (_checklistItems.isEmpty) {
+          _addChecklistItem();
+        }
+      }
+    });
+  }
+
+  void _addChecklistItem() {
+    setState(() {
+      final item = ChecklistItem(id: _uuid.v4(), text: '');
+      _checklistItems.add(item);
+      _checklistControllers.add(TextEditingController(text: ''));
+    });
+  }
+
+  void _removeChecklistItem(int index) {
+    setState(() {
+      _checklistItems.removeAt(index);
+      _checklistControllers[index].dispose();
+      _checklistControllers.removeAt(index);
+    });
   }
 
   void _saveNote() {
     String title = _titleController.text.trim();
+
+    // Sync checklist text before saving
+    if (_isChecklist) {
+      for (int i = 0; i < _checklistItems.length; i++) {
+        _checklistItems[i].text = _checklistControllers[i].text.trim();
+      }
+      // Filter out empty items if desired, or keep them
+      // Let's remove completely empty items to keep it clean
+      for (int i = _checklistItems.length - 1; i >= 0; i--) {
+        if (_checklistItems[i].text.isEmpty) {
+          _checklistItems.removeAt(i);
+          _checklistControllers[i].dispose();
+          _checklistControllers.removeAt(i);
+        }
+      }
+
+      // Update content string for preview in list view
+      // We'll store a representation of the list in content field for fallback/preview
+      _contentController.text = _checklistItems.map((e) => e.text).join('\n');
+    }
+
     final content = _contentController.text.trim();
 
-    if (title.isEmpty && content.isEmpty) {
+    // Check if empty
+    bool isEmpty = title.isEmpty && content.isEmpty;
+    if (_isChecklist && _checklistItems.isNotEmpty) isEmpty = false;
+
+    if (isEmpty) {
       if (widget.note != null) {
         Provider.of<NoteProvider>(context, listen: false)
             .deleteNote(widget.note!.id);
@@ -58,17 +181,33 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
 
     // Auto-generate title if empty
-    if (title.isEmpty && content.isNotEmpty) {
-      final words = content.split(RegExp(r'\s+'));
-      title = words.take(5).join(' ');
-      if (words.length > 5) title += '...';
+    if (title.isEmpty) {
+      if (_isChecklist && _checklistItems.isNotEmpty) {
+        title = _checklistItems.first.text;
+        if (title.isEmpty) title = 'Checklist';
+      } else if (content.isNotEmpty) {
+        final words = content.split(RegExp(r'\s+'));
+        title = words.take(5).join(' ');
+        if (words.length > 5) title += '...';
+      }
     }
 
     final provider = Provider.of<NoteProvider>(context, listen: false);
     if (_isNoteNew) {
-      provider.addNote(title, content);
+      provider.addNote(
+        title,
+        content,
+        isChecklist: _isChecklist,
+        checklistItems: _isChecklist ? _checklistItems : null,
+      );
     } else {
-      provider.updateNote(widget.note!.id, title, content);
+      provider.updateNote(
+        widget.note!.id,
+        title,
+        content,
+        isChecklist: _isChecklist,
+        checklistItems: _isChecklist ? _checklistItems : null,
+      );
     }
     Navigator.pop(context);
   }
@@ -77,25 +216,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     if (widget.note != null) {
       Provider.of<NoteProvider>(context, listen: false)
           .toggleBookmark(widget.note!.id);
-      setState(() {});
+      setState(() {}); // Rebuild to update icon color
     } else {
-      // If it's a new note, we might need to save it first or just show a message.
-      // Usually, users expect to pin after saving, but let's just show a snackbar for now
-      // or save it implicitly.
-      String title = _titleController.text.trim();
-      final content = _contentController.text.trim();
-      if (title.isEmpty && content.isEmpty) return;
-
-      if (title.isEmpty && content.isNotEmpty) {
-        final words = content.split(RegExp(r'\s+'));
-        title = words.take(5).join(' ');
-        if (words.length > 5) title += '...';
-      }
-
-      // We can't easily toggle something that doesn't exist, so we save it first.
-      // But let's keep it simple: if widget.note is null, bookmarking will happen
-      // when they save if we add a 'pendingBookmark' flag.
-      // For now, let's just allow bookmarking existing notes.
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Save the note first to pin it.')),
       );
@@ -116,23 +238,32 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: const iconoir.NavArrowLeft(),
+            icon: iconoir.NavArrowLeft(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             onPressed: _saveNote,
           ),
           actions: [
+            IconButton(
+              tooltip: _isChecklist ? 'Switch to Text' : 'Switch to Checklist',
+              icon: _isChecklist
+                  ? const iconoir.PageFlip(color: Colors.blue)
+                  : iconoir.TaskList(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              onPressed: _toggleMode,
+            ),
             if (widget.note != null)
               IconButton(
-                icon: const iconoir.Bin(),
+                icon: iconoir.Bin(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 onPressed: () {
                   Provider.of<NoteProvider>(context, listen: false)
                       .deleteNote(widget.note!.id);
                   Navigator.pop(context);
                 },
               ),
-            IconButton(
-              icon: const iconoir.Check(),
-              onPressed: _saveNote,
-            ),
             IconButton(
               icon: iconoir.Bookmark(
                 color:
@@ -144,6 +275,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         ),
         body: Column(
           children: [
+            // Metadata
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Align(
@@ -157,15 +289,18 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 ),
               ),
             ),
+
+            // Title Input
             Hero(
               tag: 'title_${widget.note?.id ?? 'new'}',
               child: Material(
                 color: Colors.transparent,
                 child: TextField(
                   controller: _titleController,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   decoration: const InputDecoration(
                     hintText: 'Title',
@@ -176,26 +311,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 ),
               ),
             ),
+
+            // Content (Text or Checklist)
             Expanded(
-              child: Hero(
-                tag: 'content_${widget.note?.id ?? 'new'}',
-                child: Material(
-                  color: Colors.transparent,
-                  child: TextField(
-                    controller: _contentController,
-                    maxLines: null,
-                    autofocus: _isNoteNew,
-                    style: const TextStyle(fontSize: 18),
-                    decoration: const InputDecoration(
-                      hintText: 'Note',
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    ),
-                  ),
-                ),
-              ),
+              child:
+                  _isChecklist ? _buildChecklistEditor() : _buildTextEditor(),
             ),
+
+            // Bottom Bar status
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -208,14 +331,18 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               child: Row(
                 children: [
                   Text(
-                    '$_wordCount words',
+                    _isChecklist
+                        ? '${_checklistItems.length} items'
+                        : '$_wordCount words',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context).hintColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                   const Spacer(),
-                  if (_wordCount >= 100)
+                  if (_isChecklist)
+                    _buildBadge('Checklist', Colors.orange)
+                  else if (_wordCount >= 100)
                     _buildBadge('Long thought', Colors.blue)
                   else if (_wordCount > 0)
                     _buildBadge('Quick note', Colors.green),
@@ -225,6 +352,120 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTextEditor() {
+    return Hero(
+      tag: 'content_${widget.note?.id ?? 'new'}',
+      child: Material(
+        color: Colors.transparent,
+        child: TextField(
+          controller: _contentController,
+          maxLines: null,
+          autofocus: _isNoteNew && !_isChecklist,
+          style: TextStyle(
+            fontSize: 18,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          decoration: const InputDecoration(
+            hintText: 'Note',
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChecklistEditor() {
+    return ReorderableListView.builder(
+      padding: const EdgeInsets.only(
+          bottom: 80), // Space for fab usually, here just padding
+      itemCount: _checklistItems.length + 1, // +1 for "Add Item" button
+      onReorder: (oldIndex, newIndex) {
+        setState(() {
+          if (oldIndex < _checklistItems.length &&
+              newIndex <= _checklistItems.length) {
+            if (newIndex > oldIndex) newIndex -= 1;
+            final item = _checklistItems.removeAt(oldIndex);
+            _checklistItems.insert(newIndex, item);
+
+            final controller = _checklistControllers.removeAt(oldIndex);
+            _checklistControllers.insert(newIndex, controller);
+          }
+        });
+      },
+      proxyDecorator: (child, index, animation) {
+        return Material(
+          elevation: 2,
+          color: Theme.of(context).cardColor,
+          child: child,
+        );
+      },
+      itemBuilder: (context, index) {
+        // "Add Item" button at the end
+        if (index == _checklistItems.length) {
+          return ListTile(
+            key: const ValueKey('add_button'),
+            leading: const Icon(Icons.add, color: Colors.grey),
+            title: Text(
+              'List Item',
+              style: TextStyle(color: Colors.grey[400]),
+            ),
+            onTap: _addChecklistItem,
+          );
+        }
+
+        final item = _checklistItems[index];
+        final controller = _checklistControllers[index];
+
+        return Material(
+          key: ValueKey(item.id),
+          color: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                const SizedBox(width: 8),
+                Icon(Icons.drag_indicator, color: Colors.grey[300], size: 20),
+                Checkbox(
+                  value: item.isDone,
+                  onChanged: (val) {
+                    setState(() {
+                      item.isDone = val ?? false;
+                    });
+                  },
+                  activeColor: Colors.grey,
+                  side: const BorderSide(color: Colors.grey, width: 2),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: controller,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      isDense: true,
+                    ),
+                    style: TextStyle(
+                      fontSize: 18,
+                      decoration:
+                          item.isDone ? TextDecoration.lineThrough : null,
+                      color: item.isDone ? Colors.grey : null,
+                    ),
+                    onSubmitted: (_) => _addChecklistItem(),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, size: 18, color: Colors.grey),
+                  onPressed: () => _removeChecklistItem(index),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

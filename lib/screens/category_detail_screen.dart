@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../providers/journal_provider.dart';
 import '../models/entry.dart';
+import '../models/category.dart';
+import '../widgets/habit_heatmap.dart';
 import 'entry_form_screen.dart';
 import 'template_editor_screen.dart';
 import '../utils/app_localizations.dart';
@@ -25,7 +27,9 @@ class CategoryDetailScreen extends StatelessWidget {
         title: Text(category.name),
         actions: [
           IconButton(
-            icon: const iconoir.EditPencil(),
+            icon: iconoir.EditPencil(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -37,7 +41,9 @@ class CategoryDetailScreen extends StatelessWidget {
             },
           ),
           IconButton(
-            icon: const iconoir.Bin(),
+            icon: iconoir.Bin(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             onPressed: () {
               showDialog(
                 context: context,
@@ -66,15 +72,58 @@ class CategoryDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: entries.isEmpty
-          ? const Center(child: Text('No entries yet. Click + to add one.'))
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: entries.length,
-              itemBuilder: (context, index) {
-                return _buildEntryCard(context, entries[index]);
-              },
-            ),
+      body: Column(
+        children: [
+          // Show habit heatmap if category has habitCheckbox fields
+          if (category.fields.any((f) => f.type == FieldType.habitCheckbox))
+            ...category.fields
+                .where((f) => f.type == FieldType.habitCheckbox)
+                .map((field) {
+              // Aggregate habit data from all entries
+              final habitData = <String, bool>{};
+              for (var entry in entries) {
+                final fieldValue = entry.values[field.id];
+                if (fieldValue is Map) {
+                  fieldValue.forEach((key, value) {
+                    if (value is bool) {
+                      habitData[key.toString()] = value;
+                    }
+                  });
+                }
+              }
+
+              return Card(
+                margin: const EdgeInsets.all(16),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: HabitHeatmap(
+                  habitData: habitData,
+                  habitName: field.label,
+                  onDayTap: (date, value) {
+                    // Toggle habit for this day
+                    _toggleHabitDay(context, categoryId, field.id, date, value);
+                  },
+                ),
+              );
+            }).toList(),
+
+          // Entry list
+          Expanded(
+            child: entries.isEmpty
+                ? const Center(
+                    child: Text('No entries yet. Click + to add one.'))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: entries.length,
+                    itemBuilder: (context, index) {
+                      return _buildEntryCard(context, entries[index]);
+                    },
+                  ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -84,9 +133,79 @@ class CategoryDetailScreen extends StatelessWidget {
             ),
           );
         },
-        child: const iconoir.Plus(),
+        child: iconoir.Plus(
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
+  }
+
+  void _toggleHabitDay(BuildContext context, String categoryId, String fieldId,
+      String date, bool value) {
+    final journalProvider =
+        Provider.of<JournalProvider>(context, listen: false);
+
+    // Find or create entry for today
+    final entries = journalProvider.getEntriesForCategory(categoryId);
+    final today = DateTime.now();
+    final todayKey = DateFormat('yyyy-MM-dd').format(today);
+
+    JournalEntry? todayEntry;
+    for (var entry in entries) {
+      final entryKey = DateFormat('yyyy-MM-dd').format(entry.timestamp);
+      if (entryKey == todayKey) {
+        todayEntry = entry;
+        break;
+      }
+    }
+
+    if (todayEntry == null) {
+      // Create new entry for today
+      final category =
+          journalProvider.categories.firstWhere((c) => c.id == categoryId);
+      final newValues = <String, dynamic>{};
+
+      // Initialize all fields
+      for (var field in category.fields) {
+        if (field.type == FieldType.habitCheckbox) {
+          newValues[field.id] = {date: value};
+        } else if (field.type == FieldType.checkbox) {
+          newValues[field.id] = false;
+        } else if (field.type == FieldType.number) {
+          newValues[field.id] = 0.0;
+        } else {
+          newValues[field.id] = '';
+        }
+      }
+
+      final newEntry = JournalEntry(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        categoryId: categoryId,
+        timestamp: today,
+        values: newValues,
+        isSuccess: false,
+      );
+
+      journalProvider.addEntry(newEntry);
+    } else {
+      // Update existing entry
+      final currentHabitData = todayEntry.values[fieldId] as Map? ?? {};
+      final updatedHabitData = Map<String, dynamic>.from(currentHabitData);
+      updatedHabitData[date] = value;
+
+      final updatedValues = Map<String, dynamic>.from(todayEntry.values);
+      updatedValues[fieldId] = updatedHabitData;
+
+      final updatedEntry = JournalEntry(
+        id: todayEntry.id,
+        categoryId: todayEntry.categoryId,
+        timestamp: todayEntry.timestamp,
+        values: updatedValues,
+        isSuccess: todayEntry.isSuccess,
+      );
+
+      journalProvider.updateEntry(updatedEntry);
+    }
   }
 
   Widget _buildEntryCard(BuildContext context, JournalEntry entry) {

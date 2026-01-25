@@ -48,7 +48,13 @@ class _JournalScreenState extends State<JournalScreen> {
             : Text(AppLocalizations.of(context, 'my_journals')),
         actions: [
           IconButton(
-            icon: _isSearching ? const iconoir.Xmark() : const iconoir.Search(),
+            icon: _isSearching
+                ? iconoir.Xmark(
+                    color: Theme.of(context).colorScheme.primary,
+                  )
+                : iconoir.Search(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
             onPressed: () {
               setState(() {
                 _isSearching = !_isSearching;
@@ -60,7 +66,9 @@ class _JournalScreenState extends State<JournalScreen> {
             },
           ),
           IconButton(
-            icon: const iconoir.Settings(),
+            icon: iconoir.Settings(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             onPressed: () {
               // Show simple sorting option
               showModalBottomSheet(
@@ -69,7 +77,9 @@ class _JournalScreenState extends State<JournalScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ListTile(
-                      leading: const iconoir.List(),
+                      leading: iconoir.List(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                       title: Text(AppLocalizations.of(context, 'sort_az')),
                       onTap: () {
                         // In a real app, you might want to call a provider method
@@ -119,7 +129,9 @@ class _JournalScreenState extends State<JournalScreen> {
                 ),
                 const SizedBox(height: 16),
                 ListTile(
-                  leading: const iconoir.MultiplePages(),
+                  leading: iconoir.MultiplePages(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   title:
                       Text(AppLocalizations.of(context, 'pilih_dari_template')),
                   subtitle:
@@ -135,7 +147,9 @@ class _JournalScreenState extends State<JournalScreen> {
                   },
                 ),
                 ListTile(
-                  leading: const iconoir.Plus(),
+                  leading: iconoir.Plus(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   title:
                       Text(AppLocalizations.of(context, 'buat_template_baru')),
                   subtitle: Text(AppLocalizations.of(context, 'buat_field')),
@@ -155,7 +169,9 @@ class _JournalScreenState extends State<JournalScreen> {
           );
         },
         label: Text(AppLocalizations.of(context, 'add_template')),
-        icon: const iconoir.Plus(),
+        icon: iconoir.Plus(
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }

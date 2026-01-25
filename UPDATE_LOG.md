@@ -1,0 +1,191 @@
+# 🚀 Journal App - Update Log
+
+## ✨ New Features Implemented
+
+### 1. **Unified Task/Note Screen** 📝✅
+
+**Location:** `lib/screens/task_note_screen.dart`
+
+#### What's New:
+- **Single Screen dengan Toggle Mode**: Gabungan Todo dan Note dalam satu screen
+- **Smooth Mode Switching**: Toggle antara Todo Mode dan Note Mode dengan animasi
+- **Shared Features**: Search, bookmark, dan tags bekerja di kedua mode
+- **Better UX**: User tidak perlu pindah tab untuk quick task vs detailed note
+
+#### How to Use:
+1. Buka tab **Task** di bottom navigation
+2. Gunakan toggle button di AppBar untuk switch antara:
+   - **Todo Mode**: Checklist dengan priority (Low/Medium/High)
+   - **Note Mode**: Grid notes seperti Google Keep
+3. Tap FAB (+) untuk menambah item sesuai mode aktif
+
+#### Features per Mode:
+
+**Todo Mode:**
+- ✅ Priority system (Low, Medium, High)
+- ✅ Swipe to complete/delete
+- ✅ Progress bar di AppBar
+- ✅ Category tags (#tag)
+- ✅ Timestamp tracking
+
+**Note Mode:**
+- ✅ Grid layout (2 columns)
+- ✅ Title + content support
+- ✅ Bookmark functionality
+- ✅ Tags support (#tag)
+- ✅ Last updated date
+
+---
+
+### 2. **Journal Habit Tracking** 📅🔥
+
+**Location:** 
+- `lib/widgets/habit_heatmap.dart` (Heatmap widget)
+- `lib/screens/category_detail_screen.dart` (Integration)
+- `lib/models/category.dart` (New field type)
+
+#### What's New:
+- **New Field Type**: `habitCheckbox` untuk daily habit tracking
+- **Heatmap Calendar**: Visual calendar dengan kotak hijau untuk hari completed
+- **Streak Counter**: Badge 🔥 yang menampilkan streak berapa hari berturut-turut
+- **Interactive Calendar**: Tap kotak untuk toggle habit completion
+- **Auto-aggregation**: Data dari semua entries digabung jadi satu heatmap
+
+#### How to Use:
+
+**Membuat Habit Tracker:**
+1. Buka **Journal** tab
+2. Tap **Add Template** → **Create New Template**
+3. Beri nama (contoh: "Daily Workout")
+4. Tap **Add Field**
+5. Pilih type: **HABITCHECKBOX**
+6. Beri label (contoh: "Workout Done")
+7. Save template
+
+**Menggunakan Habit Tracker:**
+1. Buka kategori yang memiliki habitCheckbox field
+2. Lihat **Heatmap Calendar** di bagian atas
+3. Tap kotak hari untuk mark sebagai completed
+4. Kotak akan berubah hijau ✅
+5. Streak counter akan update otomatis 🔥
+
+#### Visual Elements:
+- **Grey Box**: Belum dikerjakan
+- **Green Box**: Sudah completed ✅
+- **Blue Border**: Hari ini
+- **Streak Badge**: Menampilkan berapa hari berturut-turut (🔥 X days)
+
+#### Default Example:
+Kategori **"Gym / Olahraga"** sudah include habitCheckbox field:
+- Field: "Daily Workout"
+- Bisa langsung dicoba!
+
+---
+
+## 🎯 Benefits
+
+### Unified Task/Note Screen:
+✅ **Efisiensi**: 1 screen untuk 2 fungsi  
+✅ **Faster Workflow**: Tidak perlu pindah tab  
+✅ **Better Organization**: Todo dan Note dalam satu tempat  
+✅ **Smooth UX**: Toggle animation yang smooth  
+
+### Habit Tracking:
+✅ **Visual Motivation**: Lihat progress dalam bentuk heatmap  
+✅ **Streak System**: Gamification untuk konsistensi  
+✅ **Flexible**: Bisa untuk tracking apapun (workout, sholat, reading, dll)  
+✅ **Historical Data**: Lihat pattern habit dalam sebulan  
+
+---
+
+## 📱 Navigation Changes
+
+**Before:**
+```
+Home | Journal | Todo | Note | Settings
+```
+
+**After:**
+```
+Home | Journal | Task | Settings
+```
+
+Tab **Task** sekarang menggabungkan Todo dan Note dengan toggle mode.
+
+---
+
+## 🔧 Technical Details
+
+### New Files Created:
+1. `lib/screens/task_note_screen.dart` - Unified screen
+2. `lib/widgets/habit_heatmap.dart` - Heatmap widget
+
+### Modified Files:
+1. `lib/main.dart` - Navigation update
+2. `lib/models/category.dart` - Added habitCheckbox field type
+3. `lib/screens/entry_form_screen.dart` - Support habitCheckbox
+4. `lib/screens/category_detail_screen.dart` - Display heatmap
+5. `lib/providers/journal_provider.dart` - Added Gym category example
+
+### Dependencies:
+- No new dependencies required
+- Uses existing: `intl`, `iconoir_flutter`, `provider`
+
+---
+
+## 🧪 Testing Checklist
+
+### Task/Note Screen:
+- [ ] Toggle between Todo and Note mode works
+- [ ] Add new todo with priority
+- [ ] Add new note with title
+- [ ] Swipe to complete/delete todo
+- [ ] Bookmark note
+- [ ] Search works in both modes
+- [ ] Progress bar updates correctly
+
+### Habit Tracking:
+- [ ] Create new category with habitCheckbox
+- [ ] Heatmap displays correctly
+- [ ] Tap day to toggle completion
+- [ ] Streak counter updates
+- [ ] Data persists after app restart
+- [ ] Multiple habits in one category
+
+---
+
+## 📝 Future Enhancements (Optional)
+
+### Task/Note:
+- [ ] Convert Note → Todo
+- [ ] Convert Todo → Journal Entry
+- [ ] Bulk operations (delete multiple)
+- [ ] Sort/filter options
+
+### Habit Tracking:
+- [ ] Month navigation (previous/next month)
+- [ ] Yearly view with mini heatmaps
+- [ ] Export habit data as image
+- [ ] Reminder notifications
+- [ ] Multiple check-ins per day (counter instead of boolean)
+
+---
+
+## 🐛 Known Issues
+
+None at the moment. Please test and report any bugs!
+
+---
+
+## 💡 Usage Tips
+
+1. **Untuk Daily Habits**: Gunakan habitCheckbox field type
+2. **Untuk Weekly Goals**: Gunakan checkbox biasa di entry form
+3. **Kombinasi**: Satu kategori bisa punya habitCheckbox + field lain
+4. **Best Practice**: 1 habitCheckbox per kategori untuk clarity
+
+---
+
+**Version**: 1.1.0  
+**Date**: 2026-01-25  
+**Author**: Antigravity AI Assistant

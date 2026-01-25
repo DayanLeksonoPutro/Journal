@@ -37,6 +37,8 @@ class _EntryFormScreenState extends State<EntryFormScreen> {
           _values[field.id] = false;
         } else if (field.type == FieldType.number) {
           _values[field.id] = 0.0;
+        } else if (field.type == FieldType.habitCheckbox) {
+          _values[field.id] = <String, bool>{}; // Map of date -> bool
         } else {
           _values[field.id] = '';
         }
@@ -90,7 +92,9 @@ class _EntryFormScreenState extends State<EntryFormScreen> {
         title: Text('${widget.entry == null ? 'New' : 'Edit'} Entry'),
         actions: [
           IconButton(
-            icon: const iconoir.Check(),
+            icon: iconoir.Check(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             onPressed: _save,
           ),
         ],
@@ -166,6 +170,44 @@ class _EntryFormScreenState extends State<EntryFormScreen> {
                   const SizedBox(width: 8),
                   _buildImagePlaceholder('After'),
                 ],
+              ),
+            ],
+          ),
+        );
+      case FieldType.habitCheckbox:
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                field.label,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                ),
+                child: Row(
+                  children: [
+                    const iconoir.Calendar(color: Colors.blue),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Habit tracking - View in category detail',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

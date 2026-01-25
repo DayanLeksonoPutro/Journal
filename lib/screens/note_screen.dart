@@ -56,7 +56,9 @@ class _NoteScreenState extends State<NoteScreen> {
         ),
         actions: [
           IconButton(
-            icon: const iconoir.Search(),
+            icon: iconoir.Search(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             onPressed: () {
               showSearch(
                 context: context,
@@ -113,9 +115,12 @@ class _NoteScreenState extends State<NoteScreen> {
                                             note.title,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
                                             ),
                                           ),
                                         ),
@@ -148,11 +153,60 @@ class _NoteScreenState extends State<NoteScreen> {
                               tag: 'content_${note.id}',
                               child: Material(
                                 color: Colors.transparent,
-                                child: Text(
-                                  note.content,
-                                  maxLines: note.title.isEmpty ? 5 : 4,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                child: note.isChecklist
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: note.checklistItems
+                                            .take(note.title.isEmpty ? 5 : 4)
+                                            .map((item) => Row(
+                                                  children: [
+                                                    Icon(
+                                                      item.isDone
+                                                          ? Icons.check_box
+                                                          : Icons
+                                                              .check_box_outline_blank,
+                                                      size: 12,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Expanded(
+                                                      child: Text(
+                                                        item.text,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          decoration: item
+                                                                  .isDone
+                                                              ? TextDecoration
+                                                                  .lineThrough
+                                                              : null,
+                                                          color: item.isDone
+                                                              ? Colors.grey
+                                                              : Theme.of(
+                                                                  context,
+                                                                )
+                                                                  .colorScheme
+                                                                  .secondary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ))
+                                            .toList(),
+                                      )
+                                    : Text(
+                                        note.content,
+                                        maxLines: note.title.isEmpty ? 5 : 4,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                        ),
+                                      ),
                               ),
                             ),
                           ),
