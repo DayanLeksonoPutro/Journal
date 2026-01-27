@@ -27,6 +27,25 @@ class CategoryDetailScreen extends StatelessWidget {
         title: Text(category.name),
         actions: [
           IconButton(
+            icon: category.isBookmarked
+                ? const iconoir.BookmarkSolid(
+                    color: Colors.amber,
+                  )
+                : iconoir.Bookmark(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            onPressed: () {
+              final updatedCategory = JournalCategory(
+                id: category.id,
+                name: category.name,
+                iconName: category.iconName,
+                fields: category.fields,
+                isBookmarked: !category.isBookmarked,
+              );
+              journalProvider.updateCategory(updatedCategory);
+            },
+          ),
+          IconButton(
             icon: iconoir.EditPencil(
               color: Theme.of(context).colorScheme.primary,
             ),

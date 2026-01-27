@@ -35,6 +35,7 @@ class NoteItem {
   DateTime updatedAt;
   bool isBookmarked;
   bool isChecklist;
+  int colorIndex;
   List<ChecklistItem> checklistItems;
 
   NoteItem({
@@ -45,6 +46,7 @@ class NoteItem {
     required this.updatedAt,
     this.isBookmarked = false,
     this.isChecklist = false,
+    this.colorIndex = 0,
     this.checklistItems = const [],
   });
 
@@ -56,6 +58,7 @@ class NoteItem {
         'updatedAt': updatedAt.toIso8601String(),
         'isBookmarked': isBookmarked,
         'isChecklist': isChecklist,
+        'colorIndex': colorIndex,
         'checklistItems': checklistItems.map((i) => i.toJson()).toList(),
       };
 
@@ -67,6 +70,7 @@ class NoteItem {
         updatedAt: DateTime.parse(json['updatedAt']),
         isBookmarked: json['isBookmarked'] ?? false,
         isChecklist: json['isChecklist'] ?? false,
+        colorIndex: json['colorIndex'] ?? 0,
         checklistItems: (json['checklistItems'] as List? ?? [])
             .map((i) => ChecklistItem.fromJson(i))
             .toList(),
@@ -132,7 +136,9 @@ class NoteProvider extends ChangeNotifier {
   }
 
   void addNote(String title, String content,
-      {bool isChecklist = false, List<ChecklistItem>? checklistItems}) {
+      {bool isChecklist = false,
+      List<ChecklistItem>? checklistItems,
+      int colorIndex = 0}) {
     _notes.insert(
         0,
         NoteItem(
@@ -143,6 +149,7 @@ class NoteProvider extends ChangeNotifier {
           updatedAt: DateTime.now(),
           isChecklist: isChecklist,
           checklistItems: checklistItems ?? [],
+          colorIndex: colorIndex,
         ));
     _saveNotes();
     _updateStreak();
@@ -150,7 +157,9 @@ class NoteProvider extends ChangeNotifier {
   }
 
   void updateNote(String id, String title, String content,
-      {bool? isChecklist, List<ChecklistItem>? checklistItems}) {
+      {bool? isChecklist,
+      List<ChecklistItem>? checklistItems,
+      int? colorIndex}) {
     final index = _notes.indexWhere((n) => n.id == id);
     if (index != -1) {
       _notes[index].title = title;
@@ -159,6 +168,7 @@ class NoteProvider extends ChangeNotifier {
       _notes[index].updatedAt = DateTime.now();
       if (isChecklist != null) _notes[index].isChecklist = isChecklist;
       if (checklistItems != null) _notes[index].checklistItems = checklistItems;
+      if (colorIndex != null) _notes[index].colorIndex = colorIndex;
       _saveNotes();
       _updateStreak();
       notifyListeners();

@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            AppLocalizations.of(context, 'fast_actions'),
+            'Bookmark Action',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -48,7 +48,8 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          _buildFastActions(context, categories),
+          _buildFastActions(
+              context, categories.where((c) => c.isBookmarked).toList()),
           const SizedBox(height: 24),
           _buildBookmarkedNotes(context),
         ],
@@ -124,11 +125,21 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const iconoir.Bookmark(
-                                  color: Colors.amber,
-                                  width: 12,
-                                  height: 12,
-                                ),
+                                note.isBookmarked
+                                    ? iconoir.BookmarkSolid(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        width: 12,
+                                        height: 12,
+                                      )
+                                    : iconoir.Bookmark(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        width: 12,
+                                        height: 12,
+                                      ),
                               ],
                             ),
                           if (note.title.isNotEmpty) const SizedBox(height: 4),

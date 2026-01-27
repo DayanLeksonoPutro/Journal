@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:journal/main.dart';
 import 'package:provider/provider.dart';
 import 'package:iconoir_flutter/iconoir_flutter.dart' as iconoir;
 import 'package:intl/intl.dart';
@@ -83,7 +84,19 @@ class _NoteScreenState extends State<NoteScreen> {
               itemCount: notes.length,
               itemBuilder: (context, index) {
                 final note = notes[index];
+
+                Color backgroundColor = Theme.of(context).cardColor;
+                if (note.colorIndex > 0) {
+                  final color = SettingsProvider.themeColors[note.colorIndex];
+                  final isDark =
+                      Theme.of(context).brightness == Brightness.dark;
+                  backgroundColor = isDark
+                      ? Color.lerp(Theme.of(context).cardColor, color, 0.2)!
+                      : Color.lerp(Colors.white, color, 0.15)!;
+                }
+
                 return Card(
+                  color: backgroundColor,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -135,15 +148,15 @@ class _NoteScreenState extends State<NoteScreen> {
                                   provider.toggleBookmark(note.id);
                                 },
                                 child: note.isBookmarked
-                                    ? const iconoir.Bookmark(
-                                        color: Colors.amber,
-                                        width: 18,
-                                        height: 18,
+                                    ? iconoir.BookmarkSolid(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                       )
-                                    : const iconoir.Bookmark(
-                                        color: Colors.grey,
-                                        width: 18,
-                                        height: 18,
+                                    : iconoir.Bookmark(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                       ),
                               ),
                             ],

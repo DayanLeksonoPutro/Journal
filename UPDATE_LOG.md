@@ -1,5 +1,58 @@
 # 🚀 Journal App - Update Log
 
+## ✨ New Features Implemented (v1.2.0)
+
+### 1. **Multi-language Support** 🌐🇮🇩🇺🇸
+
+**Location:** `lib/utils/app_localizations.dart`
+
+#### What's New:
+- **Full Localization**: Aplikasi sekarang mendukung **Bahasa Indonesia** dan **English**.
+- **Instant Switch**: Ganti bahasa langsung dari menu Pengaturan tanpa restart aplikasi.
+- **Comprehensive Translation**: Mencakup menu utama, dialog, pesan error, hingga placeholder text.
+
+#### How to Use:
+1. Pergi ke Tab **Settings** / **Pengaturan**.
+2. Pilih menu **Language** / **Bahasa**.
+3. Pilih antara **English** atau **Indonesia**.
+4. Seluruh teks aplikasi akan berubah seketika!
+
+---
+
+### 2. **Dedicated Tutorial Screen** 📚💡
+
+**Location:** `lib/screens/tutorial_screen.dart`
+
+#### What's New:
+- **Visual Guide**: Panduan langkah demi langkah dengan ikon visual untuk fitur utama (Templates, Logging, Reports).
+- **Privacy Assurance**: Penjelasan eksplisit tentang keamanan data (Local Storage).
+- **Accessible Help**: Menu bantuan yang bisa diakses kapan saja dari Developer Options.
+
+---
+
+### 3. **Note UI Polish & Smart Badges** 🎨✨
+
+**Location:** `lib/screens/note_screen.dart`, `lib/screens/note_editor_screen.dart`
+
+#### What's New:
+- **Smart Badges**: Editor memberikan label otomatis:
+  - 🟢 **Quick note**: Catatan pendek.
+  - 🔵 **Long thought**: Catatan panjang (>100 kata).
+  - 🟠 **Checklist**: Mode daftar tugas.
+- **Streak Indicator**: Menampilkan streak count (🔥) langsung di AppBar Note Screen.
+- **Tag Visualization**: Menampilkan tags (#work, #ideas) langsung di kartu catatan bagian depan.
+- **Visual Refinement**: Icon bookmark lebih jelas dan transisi warna card yang lebih halus.
+
+---
+
+### 4. **Bug Fixes & Stability** 🛠️
+- Fixed: Isu crash pada `NoteEditorScreen` saat menyimpan note kosong.
+- Fixed: Konsistensi warna icon pada Onboarding.
+- Improved: Error handling saat load konfigurasi bahasa.
+
+---
+
+
 ## ✨ New Features Implemented
 
 ### 1. **Unified Task/Note Screen** 📝✅

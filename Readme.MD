@@ -11,7 +11,7 @@ com.appnovasi.journal
 "Journal cerdas dengan Success Meter: Pantau progress trading & target harian."
 
 ## Penjelasan APP
-Aplikasi "Journal Engine" yang memungkinkan user membangun sistem pencatatan mereka sendiri. Bukan sekadar catatan teks, tapi platform untuk merakit form kustom (Input Builder) untuk berbagai kebutuhan spesifik dengan fitur pengukuran keberhasilan (Success Rate).
+Aplikasi "Journal Engine" yang memungkinkan user membangun sistem pencatatan mereka sendiri. Bukan sekadar catatan teks, tapi platform untuk merakit form kustom (Input Builder) untuk berbagai kebutuhan spesifik dengan fitur pengukuran keberhasilan (Success Rate). Sudah mendukung **Multi-bahasa (Indonesia/English)**.
 
 ## Fitur Utama (Versatilitas):
 1.  **Custom Template Builder**: User merakit field sesuai kebutuhan (Teks, Angka, Checkbox, Image Before/After).
@@ -58,18 +58,15 @@ Aplikasi "Journal Engine" yang memungkinkan user membangun sistem pencatatan mer
 *   **Search & Filter**: Cari data berdasarkan tanggal atau label sukses.
 
 ## 3. TAB TASK/CATATAN (Quick Checklist)
+*   **Smart Editor**: Otomatis mendeteksi tipe konten (Short/Long Note) & beri badge.
+*   **Hybrid Mode**: Switch antara Text & Checklist dalam satu note.
 *   **Simple Todo**: Checklist cepat satu baris (untuk belanjaan dadakan atau reminder).
 *   **Plain Notes**: Catatan teks bebas tanpa strukur (untuk ide spontan).
 *   **Draft System**: Catatan yang bisa dipindahkan menjadi entri Journal permanen nanti.
 
-## 4. TAB REPORT (Advanced Analytics)
-*   **Success Rate Chart**: Grafik persentase keberhasilan per kategori (misal: Win-rate Trading 65%).
-*   **Consistency Heatmap**: Seperti grid kontribusi GitHub untuk melihat rutinitas (misal: Sholat/Gym).
-*   **Financial Summary**: Total angka (jika ada field bertipe Number/Currency).
-*   **Shareable Insight**: Tombol untuk generate gambar "Report Kartu" (9:16) untuk sosmed.
 
 ## 5. TAB PENGATURAN
-*   Bahasa (Indonesia, English)
+*   **Bahasa**: Switch instan antara Bahasa Indonesia & English.
 *   Dark Mode & Color Theme Custom (6-8 Palette)
 *   Font Style (Aesthetic/Gen-Z fonts: Inter, Montserrat, Poppins, Open Sans, Space Grotesk)
 *   Font Size (Kecil, Sederhana, Besar)
@@ -89,8 +86,8 @@ Aplikasi "Journal Engine" yang memungkinkan user membangun sistem pencatatan mer
 *   **Storage**: Local storage (Shared Preferences dalam bentuk JSON).
 *   **Icons**: Lucide Icons (Clean & Modern).
 *   **Visual Style**: Minimalist, High-Contrast (Black & White base), Smooth transitions.
-*   **Export Feature**: Widget-to-Image untuk fitur Shareable Card.
 *   **Custom Form Logic**: Dynamic form builder yang bisa generate controller secara otomatis berdasarkan template yang didefinisikan user.
+*   **Localization**: Custom `AppLocalizations` handler untuk support multi-bahasa tanpa bloat library tambahan.
 
 ## note lain lain
 * ChangeNotifier provider 
@@ -102,3 +99,5 @@ Aplikasi "Journal Engine" yang memungkinkan user membangun sistem pencatatan mer
     * UI
     * Provider
     * Model 
+* Image Handling: Hindari menyimpan string Base64 gambar langsung di JSON utama. Simpan gambar sebagai file di ApplicationDocumentsDirectory dan simpan path-nya saja di database.
+* Empty States: Pastikan tampilan saat data kosong (di setiap tab) memiliki ilustrasi yang menarik (bisa pakai Iconoir besar) dan ajakan bertindak (CTA), bukan sekadar teks "No Data".

@@ -38,12 +38,14 @@ class JournalCategory {
   final String name;
   final String iconName;
   final List<FieldDefinition> fields;
+  final bool isBookmarked;
 
   JournalCategory({
     required this.id,
     required this.name,
     required this.iconName,
     required this.fields,
+    this.isBookmarked = false,
   });
 
   Map<String, dynamic> toJson() => {
@@ -51,6 +53,7 @@ class JournalCategory {
         'name': name,
         'iconName': iconName,
         'fields': fields.map((f) => f.toJson()).toList(),
+        'isBookmarked': isBookmarked,
       };
 
   factory JournalCategory.fromJson(Map<String, dynamic> json) =>
@@ -61,5 +64,6 @@ class JournalCategory {
         fields: (json['fields'] as List)
             .map((f) => FieldDefinition.fromJson(f))
             .toList(),
+        isBookmarked: json['isBookmarked'] ?? false,
       );
 }

@@ -4,6 +4,7 @@ import 'package:iconoir_flutter/iconoir_flutter.dart' as iconoir;
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import '../providers/note_provider.dart';
+import '../main.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   final NoteItem? note;
@@ -18,6 +19,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   late TextEditingController _contentController;
   bool _isNoteNew = false;
   int _wordCount = 0;
+  int _colorIndex = 0;
 
   // Checklist state
   bool _isChecklist = false;
@@ -34,6 +36,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         TextEditingController(text: widget.note?.content ?? '');
 
     // Initialize checklist state
+    _colorIndex = widget.note?.colorIndex ?? 0;
     _isChecklist = widget.note?.isChecklist ?? false;
     if (_isChecklist) {
       // If loading existing checklist, deep copy items
@@ -199,6 +202,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         content,
         isChecklist: _isChecklist,
         checklistItems: _isChecklist ? _checklistItems : null,
+        colorIndex: _colorIndex,
       );
     } else {
       provider.updateNote(
@@ -207,6 +211,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         content,
         isChecklist: _isChecklist,
         checklistItems: _isChecklist ? _checklistItems : null,
+        colorIndex: _colorIndex,
       );
     }
     Navigator.pop(context);
@@ -228,6 +233,15 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   Widget build(BuildContext context) {
     final now = widget.note?.updatedAt ?? DateTime.now();
     final timestamp = DateFormat('EEEE, dd MMM yyyy • HH:mm').format(now);
+
+    Color backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    if (_colorIndex > 0) {
+      final color = SettingsProvider.themeColors[_colorIndex];
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      backgroundColor = isDark
+          ? Color.lerp(Theme.of(context).cardColor, color, 0.2)!
+          : Color.lerp(Colors.white, color, 0.15)!;
+    }
 
     return PopScope(
       canPop: false,
@@ -265,14 +279,18 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 },
               ),
             IconButton(
-              icon: iconoir.Bookmark(
-                color:
-                    (widget.note?.isBookmarked ?? false) ? Colors.amber : null,
-              ),
+              icon: (widget.note?.isBookmarked ?? false)
+                  ? iconoir.BookmarkSolid(
+                      color: Theme.of(context).colorScheme.primary,
+                    )
+                  : iconoir.Bookmark(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
               onPressed: _bookmarkNote,
             ),
           ],
         ),
+        backgroundColor: backgroundColor,
         body: Column(
           children: [
             // Metadata
@@ -328,24 +346,70 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   ),
                 ),
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Text(
-                    _isChecklist
-                        ? '${_checklistItems.length} items'
-                        : '$_wordCount words',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context).colorScheme.secondary,
+                  Row(
+                    children: [
+                      Text(
+                        _isChecklist
+                            ? '${_checklistItems.length} items'
+                            : '$_wordCount words',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                      const Spacer(),
+                      if (_isChecklist)
+                        _buildBadge('Checklist', Colors.orange)
+                      else if (_wordCount >= 100)
+                        _buildBadge('Long thought', Colors.blue)
+                      else if (_wordCount > 0)
+                        _buildBadge('Quick note', Colors.green),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 40,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: SettingsProvider.themeColors.length,
+                      itemBuilder: (context, index) {
+                        final color = SettingsProvider.themeColors[index];
+                        final isSelected = _colorIndex == index;
+                        return GestureDetector(
+                          onTap: () => setState(() => _colorIndex = index),
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isSelected
+                                    ? (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black)
+                                    : Colors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                            child: isSelected
+                                ? iconoir.Check(
+                                    width: 16,
+                                    height: 16,
+                                    color: color.computeLuminance() > 0.5
+                                        ? Colors.black
+                                        : Colors.white,
+                                  )
+                                : null,
+                          ),
+                        );
+                      },
                     ),
                   ),
-                  const Spacer(),
-                  if (_isChecklist)
-                    _buildBadge('Checklist', Colors.orange)
-                  else if (_wordCount >= 100)
-                    _buildBadge('Long thought', Colors.blue)
-                  else if (_wordCount > 0)
-                    _buildBadge('Quick note', Colors.green),
                 ],
               ),
             ),
