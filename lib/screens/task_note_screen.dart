@@ -92,13 +92,14 @@ class _TaskNoteScreenState extends State<TaskNoteScreen> {
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   hintText: 'Apa yang ingin dikerjakan?',
-                  hintStyle: TextStyle(color: Colors.grey[400]),
+                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: Colors.grey[100],
+                  fillColor:
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
                 ),
                 onSubmitted: (_) => _addTodoItem(),
               ),
@@ -179,7 +180,7 @@ class _TaskNoteScreenState extends State<TaskNoteScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
@@ -229,7 +230,8 @@ class _TaskNoteScreenState extends State<TaskNoteScreen> {
 
                     return LinearProgressIndicator(
                       value: progress,
-                      backgroundColor: Colors.grey[200],
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                       valueColor: AlwaysStoppedAnimation<Color>(progress == 1.0
                           ? Colors.green
                           : Theme.of(context).primaryColor),
@@ -265,20 +267,21 @@ class _TaskNoteScreenState extends State<TaskNoteScreen> {
             iconoir.TaskList(
               width: 100,
               height: 100,
-              color: Colors.grey[300],
+              color: Theme.of(context).colorScheme.outlineVariant,
             ),
             const SizedBox(height: 24),
             Text(
               'Belum ada task.',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.grey[600],
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 8),
             Text(
               'Hidupmu terlalu santai 😌',
-              style: TextStyle(color: Colors.grey[500]),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -332,7 +335,7 @@ class _TaskNoteScreenState extends State<TaskNoteScreen> {
                           ? Colors.red
                           : todo.priority == 2
                               ? Colors.orange
-                              : Colors.grey),
+                              : Theme.of(context).colorScheme.outline),
             ),
             title: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
@@ -345,7 +348,12 @@ class _TaskNoteScreenState extends State<TaskNoteScreen> {
                       style: TextStyle(
                         decoration:
                             todo.isDone ? TextDecoration.lineThrough : null,
-                        color: todo.isDone ? Colors.grey : null,
+                        color: todo.isDone
+                            ? Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.5)
+                            : null,
                         fontWeight: todo.priority == 3
                             ? FontWeight.bold
                             : FontWeight.normal,
@@ -375,7 +383,8 @@ class _TaskNoteScreenState extends State<TaskNoteScreen> {
             ),
             subtitle: Text(
               'Dibuat: ${_formatDate(todo.createdAt)}',
-              style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+              style: TextStyle(
+                  fontSize: 11, color: Theme.of(context).colorScheme.outline),
             ),
           ),
         );
@@ -395,20 +404,21 @@ class _TaskNoteScreenState extends State<TaskNoteScreen> {
             iconoir.Notes(
               width: 100,
               height: 100,
-              color: Colors.grey[300],
+              color: Theme.of(context).colorScheme.outlineVariant,
             ),
             const SizedBox(height: 24),
             Text(
               'Belum ada catatan.',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.grey[600],
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 8),
             Text(
               'Mulai catat ide-idemu! 💡',
-              style: TextStyle(color: Colors.grey[500]),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -473,8 +483,8 @@ class _TaskNoteScreenState extends State<TaskNoteScreen> {
                                 width: 18,
                                 height: 18,
                               )
-                            : const iconoir.Bookmark(
-                                color: Colors.grey,
+                            : iconoir.Bookmark(
+                                color: Theme.of(context).colorScheme.outline,
                                 width: 18,
                                 height: 18,
                               ),
@@ -521,7 +531,9 @@ class _TaskNoteScreenState extends State<TaskNoteScreen> {
                   const SizedBox(height: 4),
                   Text(
                     DateFormat('MMM dd').format(note.updatedAt),
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
+                    style: TextStyle(
+                        fontSize: 10,
+                        color: Theme.of(context).colorScheme.outline),
                   ),
                 ],
               ),
@@ -558,12 +570,12 @@ class _ModeToggleButton extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
+          color: isSelected ? Theme.of(context).cardColor : Colors.transparent,
           borderRadius: BorderRadius.circular(18),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Theme.of(context).shadowColor.withOpacity(0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   )
@@ -582,7 +594,7 @@ class _ModeToggleButton extends StatelessWidget {
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 color: isSelected
                     ? Theme.of(context).primaryColor
-                    : Colors.grey[600],
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -607,7 +619,7 @@ class _PriorityChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color color = Colors.grey;
+    Color color = Theme.of(context).colorScheme.outline;
     if (value == 2) color = Colors.orange;
     if (value == 3) color = Colors.red;
 
@@ -617,11 +629,13 @@ class _PriorityChip extends StatelessWidget {
       onSelected: (selected) => onSelected(value),
       selectedColor: color.withOpacity(0.2),
       labelStyle: TextStyle(
-        color: isSelected ? color : Colors.grey[600],
+        color:
+            isSelected ? color : Theme.of(context).colorScheme.onSurfaceVariant,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
       side: BorderSide(
-        color: isSelected ? color : Colors.grey[300]!,
+        color:
+            isSelected ? color : Theme.of(context).colorScheme.outlineVariant,
       ),
     );
   }

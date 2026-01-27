@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:journal/main.dart';
 import 'package:provider/provider.dart';
 import 'package:iconoir_flutter/iconoir_flutter.dart' as iconoir;
 import 'package:intl/intl.dart';
@@ -83,10 +84,20 @@ class HomeScreen extends StatelessWidget {
             itemCount: bookmarkedNotes.length,
             itemBuilder: (context, index) {
               final note = bookmarkedNotes[index];
+              Color backgroundColor = Theme.of(context).cardColor;
+              if (note.colorIndex > 0) {
+                final color = SettingsProvider.themeColors[note.colorIndex];
+                final isDark = Theme.of(context).brightness == Brightness.dark;
+                backgroundColor = isDark
+                    ? Color.lerp(Theme.of(context).cardColor, color, 0.2)!
+                    : Color.lerp(
+                        Theme.of(context).colorScheme.surface, color, 0.15)!;
+              }
               return Container(
                 width: 160,
                 margin: const EdgeInsets.only(right: 12),
                 child: Card(
+                  color: backgroundColor,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -160,8 +171,10 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               Text(
                                 DateFormat('MMM dd').format(note.updatedAt),
-                                style: const TextStyle(
-                                    fontSize: 10, color: Colors.grey),
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color:
+                                        Theme.of(context).colorScheme.outline),
                               ),
                             ],
                           ),
@@ -196,9 +209,11 @@ class HomeScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundColor: Colors.blue.withOpacity(0.1),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   child: IconButton(
-                    icon: const iconoir.Plus(color: Colors.blue),
+                    icon: iconoir.Plus(
+                        color: Theme.of(context).colorScheme.primary),
                     onPressed: () {
                       Navigator.push(
                         context,

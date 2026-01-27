@@ -86,13 +86,14 @@ class _TodoScreenState extends State<TodoScreen> {
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   hintText: 'Apa yang ingin dikerjakan? (Gunakan ! atau #)',
-                  hintStyle: TextStyle(color: Colors.grey[400]),
+                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: Colors.grey[100],
+                  fillColor:
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
                 ),
                 onSubmitted: (_) => _addItem(),
               ),
@@ -169,7 +170,8 @@ class _TodoScreenState extends State<TodoScreen> {
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
             value: progress,
-            backgroundColor: Colors.grey[200],
+            backgroundColor:
+                Theme.of(context).colorScheme.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation<Color>(progress == 1.0
                 ? Colors.green
                 : Theme.of(context).primaryColor),
@@ -187,21 +189,26 @@ class _TodoScreenState extends State<TodoScreen> {
                         iconoir.TaskList(
                           width: 100,
                           height: 100,
-                          color: Colors.grey[300],
+                          color: Theme.of(context).colorScheme.outlineVariant,
                         ),
                         const SizedBox(height: 24),
                         Text(
                           'Belum ada task.',
                           style:
                               Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: Colors.grey[600],
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
                                     fontWeight: FontWeight.bold,
                                   ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Hidupmu terlalu santai 😌',
-                          style: TextStyle(color: Colors.grey[500]),
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -254,7 +261,9 @@ class _TodoScreenState extends State<TodoScreen> {
                                         ? Colors.red
                                         : todo.priority == 2
                                             ? Colors.orange
-                                            : Colors.grey),
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .outline),
                           ),
                           title: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 300),
@@ -268,7 +277,12 @@ class _TodoScreenState extends State<TodoScreen> {
                                       decoration: todo.isDone
                                           ? TextDecoration.lineThrough
                                           : null,
-                                      color: todo.isDone ? Colors.grey : null,
+                                      color: todo.isDone
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withOpacity(0.5)
+                                          : null,
                                       fontWeight: todo.priority == 3
                                           ? FontWeight.bold
                                           : FontWeight.normal,
@@ -301,7 +315,8 @@ class _TodoScreenState extends State<TodoScreen> {
                           subtitle: Text(
                             'Dibuat: ${_formatDate(todo.createdAt)}',
                             style: TextStyle(
-                                fontSize: 11, color: Colors.grey[500]),
+                                fontSize: 11,
+                                color: Theme.of(context).colorScheme.outline),
                           ),
                         ),
                       );
@@ -386,7 +401,7 @@ class _PriorityChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color color = Colors.grey;
+    Color color = Theme.of(context).colorScheme.outline;
     if (value == 2) color = Colors.orange;
     if (value == 3) color = Colors.red;
 
@@ -396,11 +411,13 @@ class _PriorityChip extends StatelessWidget {
       onSelected: (selected) => onSelected(value),
       selectedColor: color.withOpacity(0.2),
       labelStyle: TextStyle(
-        color: isSelected ? color : Colors.grey[600],
+        color:
+            isSelected ? color : Theme.of(context).colorScheme.onSurfaceVariant,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
       side: BorderSide(
-        color: isSelected ? color : Colors.grey[300]!,
+        color:
+            isSelected ? color : Theme.of(context).colorScheme.outlineVariant,
       ),
     );
   }

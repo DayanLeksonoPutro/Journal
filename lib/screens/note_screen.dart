@@ -92,7 +92,8 @@ class _NoteScreenState extends State<NoteScreen> {
                       Theme.of(context).brightness == Brightness.dark;
                   backgroundColor = isDark
                       ? Color.lerp(Theme.of(context).cardColor, color, 0.2)!
-                      : Color.lerp(Colors.white, color, 0.15)!;
+                      : Color.lerp(
+                          Theme.of(context).colorScheme.surface, color, 0.15)!;
                 }
 
                 return Card(
@@ -180,7 +181,9 @@ class _NoteScreenState extends State<NoteScreen> {
                                                           : Icons
                                                               .check_box_outline_blank,
                                                       size: 12,
-                                                      color: Colors.grey,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .outlineVariant,
                                                     ),
                                                     const SizedBox(width: 4),
                                                     Expanded(
@@ -197,7 +200,12 @@ class _NoteScreenState extends State<NoteScreen> {
                                                                   .lineThrough
                                                               : null,
                                                           color: item.isDone
-                                                              ? Colors.grey
+                                                              ? Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .onSurface
+                                                                  .withOpacity(
+                                                                      0.5)
                                                               : Theme.of(
                                                                   context,
                                                                 )
@@ -258,8 +266,9 @@ class _NoteScreenState extends State<NoteScreen> {
                           const SizedBox(height: 4),
                           Text(
                             DateFormat('MMM dd').format(note.updatedAt),
-                            style: const TextStyle(
-                                fontSize: 10, color: Colors.grey),
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Theme.of(context).colorScheme.outline),
                           ),
                         ],
                       ),

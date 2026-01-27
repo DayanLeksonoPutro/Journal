@@ -82,9 +82,7 @@ class SettingsScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: isSelected
-                              ? (Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black)
+                              ? Theme.of(context).colorScheme.onSurface
                               : Colors.transparent,
                           width: 2,
                         ),
@@ -177,7 +175,7 @@ class SettingsScreen extends StatelessWidget {
             child: Text(
               '${AppLocalizations.of(context, 'version')} 1.0.0 (Build 1)',
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.grey),
+              style: TextStyle(color: Theme.of(context).colorScheme.outline),
             ),
           ),
         ],
@@ -211,7 +209,8 @@ class SettingsScreen extends StatelessWidget {
             .map((e) => ListTile(
                   title: Text(e.value),
                   trailing: settings.language == e.key
-                      ? const iconoir.Check(color: Colors.blue)
+                      ? iconoir.Check(
+                          color: Theme.of(context).colorScheme.primary)
                       : null,
                   onTap: () {
                     settings.setLanguage(e.key);
@@ -237,7 +236,8 @@ class SettingsScreen extends StatelessWidget {
             .map((e) => ListTile(
                   title: Text(AppLocalizations.of(context, e.value)),
                   trailing: settings.fontSizeMultiplier == e.key
-                      ? const iconoir.Check(color: Colors.blue)
+                      ? iconoir.Check(
+                          color: Theme.of(context).colorScheme.primary)
                       : null,
                   onTap: () {
                     settings.setFontSizeMultiplier(e.key);
@@ -293,7 +293,7 @@ class SettingsScreen extends StatelessWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: Theme.of(context).dividerColor,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -367,9 +367,9 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const iconoir.Bin(color: Colors.red),
+            leading: iconoir.Bin(color: Theme.of(context).colorScheme.error),
             title: Text(AppLocalizations.of(context, 'clear_all_data'),
-                style: TextStyle(color: Colors.red)),
+                style: TextStyle(color: Theme.of(context).colorScheme.error)),
             onTap: () {
               Provider.of<JournalProvider>(context, listen: false)
                   .clearAllData();
@@ -616,7 +616,9 @@ class _FontListState extends State<_FontList> {
         font,
         style: GoogleFonts.getFont(font, fontSize: 16),
       ),
-      trailing: isSelected ? const iconoir.Check(color: Colors.blue) : null,
+      trailing: isSelected
+          ? iconoir.Check(color: Theme.of(context).colorScheme.primary)
+          : null,
       selected: isSelected,
       onTap: () {
         widget.settings.setFontFamily(font);

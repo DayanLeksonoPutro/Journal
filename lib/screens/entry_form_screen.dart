@@ -191,18 +191,24 @@ class _EntryFormScreenState extends State<EntryFormScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.05),
+                  color:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                  border: Border.all(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.2)),
                 ),
                 child: Row(
                   children: [
-                    const iconoir.Calendar(color: Colors.blue),
+                    iconoir.Calendar(
+                        color: Theme.of(context).colorScheme.primary),
                     const SizedBox(width: 8),
                     Text(
                       'Habit tracking - View in category detail',
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontSize: 12,
                       ),
                     ),
@@ -221,17 +227,20 @@ class _EntryFormScreenState extends State<EntryFormScreen> {
         aspectRatio: 1,
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.grey[200],
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey[400]!),
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const iconoir.MediaImage(color: Colors.grey),
+              iconoir.MediaImage(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
               const SizedBox(height: 4),
               Text(label,
-                  style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontSize: 12)),
             ],
           ),
         ),

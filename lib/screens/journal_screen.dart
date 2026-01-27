@@ -105,7 +105,8 @@ class _JournalScreenState extends State<JournalScreen> {
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey),
+                border:
+                    Border.all(color: Theme.of(context).colorScheme.outline),
               ),
               child: Row(
                 children: [
@@ -175,7 +176,7 @@ class _JournalScreenState extends State<JournalScreen> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: Theme.of(context).colorScheme.outlineVariant,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -238,7 +239,9 @@ class _JournalScreenState extends State<JournalScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? Colors.grey : Colors.transparent,
+            color: isSelected
+                ? Theme.of(context).colorScheme.outline
+                : Colors.transparent,
           ),
         ),
         child: Column(
@@ -251,7 +254,9 @@ class _JournalScreenState extends State<JournalScreen> {
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? Colors.white : Colors.grey,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.secondary,
               ),
             ),
           ],
@@ -308,11 +313,11 @@ class _JournalScreenState extends State<JournalScreen> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: Colors.grey[850],
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Theme.of(context).shadowColor.withOpacity(0.1),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -328,14 +333,14 @@ class _JournalScreenState extends State<JournalScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Theme.of(context).colorScheme.surfaceContainerHigh,
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: _getCategoryIcon(
                       category.iconName,
                       size: 24,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -346,8 +351,8 @@ class _JournalScreenState extends State<JournalScreen> {
                       Text(
                         category.name,
                         textAlign: TextAlign.start,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
@@ -356,8 +361,8 @@ class _JournalScreenState extends State<JournalScreen> {
                       Text(
                         '${category.fields.length} Fields',
                         textAlign: TextAlign.start,
-                        style: const TextStyle(
-                          color: Colors.white70,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontSize: 10,
                         ),
                         overflow: TextOverflow.clip,
@@ -382,14 +387,16 @@ class _JournalScreenState extends State<JournalScreen> {
                       decoration: BoxDecoration(
                         color: isCompleted
                             ? Theme.of(context).primaryColor
-                            : Colors.white.withOpacity(0.2),
+                            : Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHigh,
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.check_circle,
                         size: 24,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     ),
                   ),
@@ -416,7 +423,7 @@ class _JournalScreenState extends State<JournalScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[850],
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -444,8 +451,8 @@ class _JournalScreenState extends State<JournalScreen> {
             const SizedBox(height: 12),
             Text(
               category.name,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
@@ -456,8 +463,8 @@ class _JournalScreenState extends State<JournalScreen> {
             const SizedBox(height: 4),
             Text(
               '${category.fields.length} Fields',
-              style: const TextStyle(
-                color: Colors.grey,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 12,
               ),
             ),
@@ -489,7 +496,7 @@ class _JournalScreenState extends State<JournalScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.grey[850],
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -497,21 +504,21 @@ class _JournalScreenState extends State<JournalScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Theme.of(context).colorScheme.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: _getCategoryIcon(
                 category.iconName,
                 size: 20,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Text(
                 category.name,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -524,9 +531,9 @@ class _JournalScreenState extends State<JournalScreen> {
                 size: 20,
               ),
             const SizedBox(width: 8),
-            const Icon(
+            Icon(
               Icons.chevron_right,
-              color: Colors.grey,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               size: 20,
             ),
           ],
@@ -552,7 +559,8 @@ class _JournalScreenState extends State<JournalScreen> {
               context.read<JournalProvider>().deleteCategory(category.id);
               Navigator.pop(context);
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text('Delete',
+                style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),
@@ -648,7 +656,7 @@ class _JournalScreenState extends State<JournalScreen> {
                       Text(
                         category.name,
                         textAlign: TextAlign.start,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
@@ -658,7 +666,7 @@ class _JournalScreenState extends State<JournalScreen> {
                       Text(
                         '${category.fields.length} Fields', // Simplified description
                         textAlign: TextAlign.start,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white70,
                           fontSize: 10,
                         ),
@@ -689,7 +697,7 @@ class _JournalScreenState extends State<JournalScreen> {
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.check_circle,
                         size: 24,
                         color: Colors.white,

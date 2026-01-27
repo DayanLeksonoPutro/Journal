@@ -240,7 +240,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       final isDark = Theme.of(context).brightness == Brightness.dark;
       backgroundColor = isDark
           ? Color.lerp(Theme.of(context).cardColor, color, 0.2)!
-          : Color.lerp(Colors.white, color, 0.15)!;
+          : Color.lerp(Theme.of(context).colorScheme.surface, color, 0.15)!;
     }
 
     return PopScope(
@@ -261,7 +261,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             IconButton(
               tooltip: _isChecklist ? 'Switch to Text' : 'Switch to Checklist',
               icon: _isChecklist
-                  ? const iconoir.PageFlip(color: Colors.blue)
+                  ? iconoir.PageFlip(
+                      color: Theme.of(context).colorScheme.primary)
                   : iconoir.TaskList(
                       color: Theme.of(context).colorScheme.primary,
                     ),
@@ -363,7 +364,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                       if (_isChecklist)
                         _buildBadge('Checklist', Colors.orange)
                       else if (_wordCount >= 100)
-                        _buildBadge('Long thought', Colors.blue)
+                        _buildBadge('Long thought',
+                            Theme.of(context).colorScheme.primary)
                       else if (_wordCount > 0)
                         _buildBadge('Quick note', Colors.green),
                     ],
@@ -390,8 +392,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                 color: isSelected
                                     ? (Theme.of(context).brightness ==
                                             Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black)
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onInverseSurface)
                                     : Colors.transparent,
                                 width: 2,
                               ),
@@ -472,10 +478,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         if (index == _checklistItems.length) {
           return ListTile(
             key: const ValueKey('add_button'),
-            leading: const Icon(Icons.add, color: Colors.grey),
+            leading: Icon(Icons.add,
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
             title: Text(
               'List Item',
-              style: TextStyle(color: Colors.grey[400]),
+              style: TextStyle(color: Theme.of(context).hintColor),
             ),
             onTap: _addChecklistItem,
           );
@@ -492,7 +499,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             child: Row(
               children: [
                 const SizedBox(width: 8),
-                Icon(Icons.drag_indicator, color: Colors.grey[300], size: 20),
+                Icon(Icons.drag_indicator,
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                    size: 20),
                 Checkbox(
                   value: item.isDone,
                   onChanged: (val) {
@@ -500,8 +509,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                       item.isDone = val ?? false;
                     });
                   },
-                  activeColor: Colors.grey,
-                  side: const BorderSide(color: Colors.grey, width: 2),
+                  activeColor: Theme.of(context).colorScheme.primary,
+                  side: BorderSide(
+                      color: Theme.of(context).colorScheme.outline, width: 2),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4)),
                 ),
@@ -516,13 +526,20 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                       fontSize: 18,
                       decoration:
                           item.isDone ? TextDecoration.lineThrough : null,
-                      color: item.isDone ? Colors.grey : null,
+                      color: item.isDone
+                          ? Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.5)
+                          : null,
                     ),
                     onSubmitted: (_) => _addChecklistItem(),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close, size: 18, color: Colors.grey),
+                  icon: Icon(Icons.close,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant),
                   onPressed: () => _removeChecklistItem(index),
                 ),
               ],
