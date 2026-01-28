@@ -39,6 +39,7 @@ class JournalProvider extends ChangeNotifier {
       JournalCategory(
         id: 'cat_trading',
         name: 'Trading',
+        colorIndex: 0,
         iconName: 'lineChart',
         fields: [
           FieldDefinition(id: 'pair', label: 'Pair', type: FieldType.text),
@@ -59,6 +60,7 @@ class JournalProvider extends ChangeNotifier {
       JournalCategory(
         id: 'cat_sholat',
         name: 'Sholat',
+        colorIndex: 0,
         iconName: 'checkCircle',
         fields: [
           FieldDefinition(
@@ -91,6 +93,7 @@ class JournalProvider extends ChangeNotifier {
       JournalCategory(
         id: 'cat_gym',
         name: 'Gym / Olahraga',
+        colorIndex: 0,
         iconName: 'dumbbell',
         fields: [
           FieldDefinition(

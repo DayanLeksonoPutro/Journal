@@ -38,6 +38,7 @@ class CategoryDetailScreen extends StatelessWidget {
               final updatedCategory = JournalCategory(
                 id: category.id,
                 name: category.name,
+                colorIndex: category.colorIndex,
                 iconName: category.iconName,
                 fields: category.fields,
                 isBookmarked: !category.isBookmarked,

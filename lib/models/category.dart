@@ -36,6 +36,7 @@ class FieldDefinition {
 class JournalCategory {
   final String id;
   final String name;
+  final int colorIndex;
   final String iconName;
   final List<FieldDefinition> fields;
   final bool isBookmarked;
@@ -43,6 +44,7 @@ class JournalCategory {
   JournalCategory({
     required this.id,
     required this.name,
+    required this.colorIndex,
     required this.iconName,
     required this.fields,
     this.isBookmarked = false,
@@ -51,6 +53,7 @@ class JournalCategory {
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
+        'colorIndex': colorIndex,
         'iconName': iconName,
         'fields': fields.map((f) => f.toJson()).toList(),
         'isBookmarked': isBookmarked,
@@ -60,6 +63,7 @@ class JournalCategory {
       JournalCategory(
         id: json['id'],
         name: json['name'],
+        colorIndex: json['colorIndex'],
         iconName: json['iconName'],
         fields: (json['fields'] as List)
             .map((f) => FieldDefinition.fromJson(f))

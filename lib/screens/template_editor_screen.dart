@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:journal/main.dart';
 import 'package:provider/provider.dart';
 import 'package:iconoir_flutter/iconoir_flutter.dart' as iconoir;
 import 'package:uuid/uuid.dart';
@@ -19,11 +20,13 @@ class _TemplateEditorScreenState extends State<TemplateEditorScreen> {
   late String _name;
   late String _iconName;
   late List<FieldDefinition> _fields;
+  late int _colorIndex;
 
   @override
   void initState() {
     super.initState();
     _name = widget.category?.name ?? '';
+    _colorIndex = widget.category?.colorIndex ?? 0;
     _iconName = widget.category?.iconName ?? 'book';
     _fields = widget.category?.fields != null
         ? List.from(widget.category!.fields)
@@ -51,6 +54,7 @@ class _TemplateEditorScreenState extends State<TemplateEditorScreen> {
 
       final category = JournalCategory(
         id: widget.category?.id ?? const Uuid().v4(),
+        colorIndex: _colorIndex,
         name: _name,
         iconName: _iconName,
         fields: _fields,
@@ -97,6 +101,48 @@ class _TemplateEditorScreenState extends State<TemplateEditorScreen> {
                   val == null || val.isEmpty ? 'Required' : null,
             ),
             const SizedBox(height: 24),
+            SizedBox(
+              height: 40,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: SettingsProvider.themeColors.length,
+                itemBuilder: (context, index) {
+                  final color = SettingsProvider.themeColors[index];
+                  final isSelected = _colorIndex == index;
+                  return GestureDetector(
+                    onTap: () => setState(() => _colorIndex = index),
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 8),
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSelected
+                              ? (Theme.of(context).brightness == Brightness.dark
+                                  ? Theme.of(context).colorScheme.onSurface
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .onInverseSurface)
+                              : Colors.transparent,
+                          width: 2,
+                        ),
+                      ),
+                      child: isSelected
+                          ? iconoir.Check(
+                              width: 16,
+                              height: 16,
+                              color: color.computeLuminance() > 0.5
+                                  ? Colors.black
+                                  : Colors.white,
+                            )
+                          : null,
+                    ),
+                  );
+                },
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

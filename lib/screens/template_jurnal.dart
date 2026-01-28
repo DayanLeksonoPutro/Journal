@@ -12,6 +12,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_sholat',
           name: 'Ibadah Harian',
+          colorIndex: 0,
           iconName: 'checkCircle',
           fields: [
             FieldDefinition(
@@ -48,6 +49,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_trading',
           name: 'Trading Log',
+          colorIndex: 0,
           iconName: 'lineChart',
           fields: [
             FieldDefinition(
@@ -71,6 +73,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_work',
           name: 'Produktifitas Kerja',
+          colorIndex: 0,
           iconName: 'book',
           fields: [
             FieldDefinition(
@@ -89,6 +92,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_gym',
           name: 'Fitness & Gym',
+          colorIndex: 0,
           iconName: 'dumbbell',
           fields: [
             FieldDefinition(
@@ -104,6 +108,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_finance',
           name: 'Catatan Keuangan',
+          colorIndex: 0,
           iconName: 'shoppingCart',
           fields: [
             FieldDefinition(
@@ -119,6 +124,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_diet',
           name: 'Diet & Nutrisi',
+          colorIndex: 0,
           iconName: 'checkCircle',
           fields: [
             FieldDefinition(
@@ -137,6 +143,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_mood',
           name: 'Mood & Gratitude',
+          colorIndex: 0,
           iconName: 'journal',
           fields: [
             FieldDefinition(
@@ -154,6 +161,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_learning',
           name: 'Belajar & Kursus',
+          colorIndex: 0,
           iconName: 'book',
           fields: [
             FieldDefinition(
@@ -169,6 +177,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_travel',
           name: 'Travel Journal',
+          colorIndex: 0,
           iconName: 'airplane',
           fields: [
             FieldDefinition(
@@ -184,6 +193,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_book_rev',
           name: 'Review Buku',
+          colorIndex: 0,
           iconName: 'book',
           fields: [
             FieldDefinition(
@@ -199,6 +209,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_pet',
           name: 'Pet Care',
+          colorIndex: 0,
           iconName: 'checkCircle',
           fields: [
             FieldDefinition(
@@ -215,6 +226,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_home',
           name: 'Perawatan Rumah',
+          colorIndex: 0,
           iconName: 'settings',
           fields: [
             FieldDefinition(
@@ -231,6 +243,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_garden',
           name: 'Kebun & Tanaman',
+          colorIndex: 0,
           iconName: 'leaf',
           fields: [
             FieldDefinition(
@@ -247,6 +260,7 @@ class TemplateJurnalScreen extends StatelessWidget {
         JournalCategory(
           id: 'tpl_relationship',
           name: 'Relationship & Family',
+          colorIndex: 0,
           iconName: 'journal',
           fields: [
             FieldDefinition(
@@ -277,6 +291,7 @@ class TemplateJurnalScreen extends StatelessWidget {
     final newCategory = JournalCategory(
       id: const Uuid().v4(),
       name: template.name,
+      colorIndex: template.colorIndex,
       iconName: template.iconName,
       fields: List.from(template.fields),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:journal/main.dart';
 import 'package:provider/provider.dart';
 import 'package:iconoir_flutter/iconoir_flutter.dart' as iconoir;
 import '../providers/journal_provider.dart';
@@ -300,6 +301,15 @@ class _JournalScreenState extends State<JournalScreen> {
         e.timestamp.month == now.month &&
         e.timestamp.day == now.day);
 
+    Color backgroundColor = Theme.of(context).cardColor;
+    if (category.colorIndex > 0) {
+      final color = SettingsProvider.themeColors[category.colorIndex];
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      backgroundColor = isDark
+          ? Color.lerp(Theme.of(context).cardColor, color, 0.2)!
+          : Color.lerp(Theme.of(context).colorScheme.surface, color, 0.15)!;
+    }
+
     return GestureDetector(
       onLongPress: () => _confirmDelete(context, category),
       onTap: () {
@@ -313,7 +323,7 @@ class _JournalScreenState extends State<JournalScreen> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -411,6 +421,14 @@ class _JournalScreenState extends State<JournalScreen> {
   }
 
   Widget _buildGridCard(BuildContext context, JournalCategory category) {
+    Color backgroundColor = Theme.of(context).cardColor;
+    if (category.colorIndex > 0) {
+      final color = SettingsProvider.themeColors[category.colorIndex];
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      backgroundColor = isDark
+          ? Color.lerp(Theme.of(context).cardColor, color, 0.2)!
+          : Color.lerp(Theme.of(context).colorScheme.surface, color, 0.15)!;
+    }
     return GestureDetector(
       onLongPress: () => _confirmDelete(context, category),
       onTap: () {
@@ -423,7 +441,7 @@ class _JournalScreenState extends State<JournalScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -483,6 +501,15 @@ class _JournalScreenState extends State<JournalScreen> {
         e.timestamp.month == now.month &&
         e.timestamp.day == now.day);
 
+    Color backgroundColor = Theme.of(context).cardColor;
+    if (category.colorIndex > 0) {
+      final color = SettingsProvider.themeColors[category.colorIndex];
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      backgroundColor = isDark
+          ? Color.lerp(Theme.of(context).cardColor, color, 0.2)!
+          : Color.lerp(Theme.of(context).colorScheme.surface, color, 0.15)!;
+    }
+
     return GestureDetector(
       onLongPress: () => _confirmDelete(context, category),
       onTap: () {
@@ -496,7 +523,7 @@ class _JournalScreenState extends State<JournalScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -563,153 +590,6 @@ class _JournalScreenState extends State<JournalScreen> {
                 style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryCard_(BuildContext context, JournalCategory category) {
-    // Determine if "completed" today (has any entry)
-    final journalProvider = Provider.of<JournalProvider>(context);
-    final now = DateTime.now();
-    final isCompleted = journalProvider.entries.any((e) =>
-        e.categoryId == category.id &&
-        e.timestamp.year == now.year &&
-        e.timestamp.month == now.month &&
-        e.timestamp.day == now.day);
-
-    return GestureDetector(
-      onLongPress: () {
-        // Simple delete on long press
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(AppLocalizations.of(context, 'delete_journal') ??
-                'Delete Journal?'),
-            content:
-                Text('Are you sure you want to delete "${category.name}"?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  context.read<JournalProvider>().deleteCategory(category.id);
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Delete',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      onTap: () {
-        // Navigate to detail on tap
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CategoryDetailScreen(categoryId: category.id),
-          ),
-        );
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: Colors.grey[850], // Use requested dark color
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: _getCategoryIcon(
-                      category.iconName,
-                      size: 24, // Smaller icon for the card header
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        category.name,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        '${category.fields.length} Fields', // Simplified description
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 10,
-                        ),
-                        overflow: TextOverflow.clip,
-                      ),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    // Also navigate to detail for now, or could trigger quick add
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            CategoryDetailScreen(categoryId: category.id),
-                      ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: isCompleted
-                            ? Theme.of(context).primaryColor
-                            : Colors.white.withOpacity(0.2),
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        Icons.check_circle,
-                        size: 24,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            _buildContributionGrid(category),
-          ],
-        ),
       ),
     );
   }

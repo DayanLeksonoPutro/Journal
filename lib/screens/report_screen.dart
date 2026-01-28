@@ -89,10 +89,13 @@ class ReportScreen extends StatelessWidget {
                     ),
                     PieChartSectionData(
                       value: 100 - successRate,
-                      color: Colors.grey[200]!,
+                      color:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                       title: 'Other',
                       radius: 40,
-                      titleStyle: const TextStyle(color: Colors.grey),
+                      titleStyle: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   ],
                 ),
@@ -123,9 +126,10 @@ class ReportScreen extends StatelessWidget {
           aspectRatio: 2,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.grey[50],
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey[200]!),
+              border: Border.all(
+                  color: Theme.of(context).colorScheme.outlineVariant),
             ),
             child: GridView.builder(
               padding: const EdgeInsets.all(8),

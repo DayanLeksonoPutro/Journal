@@ -52,6 +52,23 @@
 
 ---
 
+### 5. **Dark Mode & Visual Consistency** 🎨🌑
+
+**Review**: All Screens
+**Status**: Adjusted & Polished
+
+#### What's New:
+- **System-wide Theme Integration**: Seluruh komponen aplikasi kini menggunakan `Theme.of(context)` alih-alih hardcoded colors.
+- **Adaptive Colors**: Komponen otomatis menyesuaikan diri saat mode berubah (Light/Dark mode) atau saat `colorSchemeSeed` berubah.
+- **Removed Hardcoded Colors**: Menghapus penggunaan `Colors.grey`, `Colors.blue`, `Colors.white` yang statis di berbagai screen:
+    - `JournalScreen`: Card background & Typography
+    - `NoteScreen`: Card dynamic colors
+    - `TodoScreen`, `TaskNoteScreen`: Input decorations & Icons
+    - `SettingsScreen`: Checkmarks & Labels
+- **Lint Fixes**: Optimized `const` usage for dynamic styling.
+
+---
+
 
 ## ✨ New Features Implemented
 
